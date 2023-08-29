@@ -5,21 +5,22 @@ def sameValues(arr1, arr2):
             if arr1[i] == arr2[j]:
                 same = True
                 break
-        
+
         if not same:
             return False
-    
+
     for i in range(len(arr2)):
         same = False
         for j in range(len(arr1)):
             if arr2[i] == arr1[j]:
                 same = True
                 break
-        
+
         if not same:
             return False
-    
+
     return True
+
 
 arr1 = [1, 2, 3]
 arr2 = [1, 2, 3, 3, 2]
