@@ -3,10 +3,11 @@ package W2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class D2 {
     public static void main(String[] args) {
-        System.out.println(queenThreatenConfig());
+        findAllConfigs();
     }
 
     public static int longestAdditionCycle() {
@@ -87,29 +88,87 @@ public class D2 {
      * and each index represents the row (0-7).
      */
 
+    public static void findAllConfigs() {
+        int counter = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                for (int k = 0; k < 8; k++) {
+                    for (int l = 0; l < 8; l++) {
+                        for (int m = 0; m < 8; m++) {
+                            for (int n = 0; n < 8; n++) {
+                                for (int o = 0; o < 8; o++) {
+                                    for (int p = 0; p < 8; p++) {
+                                        ArrayList<Integer> config = new ArrayList<>(
+                                                Arrays.asList(i, j, k, l, m, n, o, p));
+                                        if (checkConfigValidity(config)) {
+                                            printAsChessboard(config);
+                                            System.out.println(config);
+                                            System.out.println();
+                                            counter++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println(counter + " configs found.");
+    }
+
+    public static void findManyConfigs() {
+        HashSet<ArrayList<Integer>> configs = new HashSet<>();
+        for (int i = 0; i < 100; i++) {
+            configs.add(queenThreatenConfig());
+        }
+    }
+
     public static ArrayList<Integer> queenThreatenConfig() {
         ArrayList<Integer> config = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             config.add(i);
         }
 
-        boolean isValid = false;
+        boolean isValid;
         do {
             addRandomPositions(config);
-            for (int i = 0; i < 7; i++) {
-                isValid = true;
-                for (int j = i + 1; j < 8; j++) {
-                    if (queenDoesThreatenSquare(i, config.get(i), j, config.get(j))) {
-                        isValid = false;
-                        break;
-                    }
-                }
-                if (!isValid)
-                    break;
-            }
+            isValid = checkConfigValidity(config);
         } while (!isValid);
 
+        printAsChessboard(config);
+        System.out.println(config);
+        System.out.println();
         return config;
+    }
+
+    private static boolean checkConfigValidity(ArrayList<Integer> config) {
+        boolean isValid = true;
+        for (int i = 0; i < 7; i++) {
+            for (int j = i + 1; j < 8; j++) {
+                if (queenDoesThreatenSquare(i, config.get(i), j, config.get(j))) {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (!isValid)
+                break;
+        }
+        return isValid;
+    }
+
+    private static void printAsChessboard(ArrayList<Integer> config) {
+        for (int i = 0; i < 8; i++) {
+            System.out.print("|");
+            for (int j = 0; j < 8; j++) {
+                if (config.get(i) == j)
+                    System.out.print("*|");
+                else
+                    System.out.print("_|");
+            }
+            System.out.println();
+        }
     }
 
     public static boolean queenDoesThreatenSquare(int row, int col, int queenRow, int queenCol) {
