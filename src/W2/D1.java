@@ -36,10 +36,10 @@ public class D1 {
          * 
          * System.out.println(countCompounds(words1));
          * System.out.println(countCompounds(words2));
-         * 
-         * System.out.println(Arrays.toString(largestTriangle(points1)));
-         * System.out.println(Arrays.toString(largestTriangle(points2)));
          */
+        System.out.println(Arrays.toString(largestTriangle(points1)));
+        System.out.println(Arrays.toString(largestTriangle(points2)));
+
     }
 
     public static boolean sameValues(int[] arr1, int[] arr2) {
@@ -132,8 +132,9 @@ public class D1 {
 
     /* Area=1/2∣(𝑥𝐴−𝑥𝐶)(𝑦𝐵−𝑦𝐴)−(𝑥𝐴−𝑥𝐵)(𝑦𝐶−𝑦𝐴)∣ */
     public static double area(Point p1, Point p2, Point p3) {
-        return Math.abs((p1.getX() - p3.getX()) * (p2.getY() - p1.getY())
-                - (p1.getX() - p2.getX()) * (p3.getY() - p1.getY())) / 2;
+        return Math.abs(
+                (p1.getX() - p3.getX()) * (p2.getY() - p1.getY()) - (p1.getX() - p2.getX()) * (p3.getY() - p1.getY()))
+                / 2;
     }
 }
 
@@ -141,9 +142,9 @@ class Point {
     private double x;
     private double y;
 
-    public Point(double xCoordinate, double yCoordinate) {
-        this.x = xCoordinate;
-        this.y = yCoordinate;
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     public double getX() {
