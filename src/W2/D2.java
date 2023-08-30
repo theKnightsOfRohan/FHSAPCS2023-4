@@ -151,7 +151,7 @@ public class D2 {
         boolean isValid = true;
         for (int i = 0; i < 7; i++) {
             for (int j = i + 1; j < 8; j++) {
-                if (queenDoesThreatenSquare(i, config.get(i), j, config.get(j))) {
+                if (queenThreatensSquare(i, config.get(i), j, config.get(j))) {
                     isValid = false;
                     break;
                 }
@@ -175,7 +175,7 @@ public class D2 {
         }
     }
 
-    public static boolean queenDoesThreatenSquare(int row, int col, int queenRow, int queenCol) {
+    public static boolean queenThreatensSquare(int row, int col, int queenRow, int queenCol) {
         if (row == queenRow || col == queenCol)
             return true;
         if (Math.abs(row - queenRow) == Math.abs(col - queenCol))
