@@ -99,33 +99,27 @@ public class D2 {
      */
 
     public static void findAllConfigs() {
-        int counter = 0;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                for (int k = 0; k < 8; k++) {
-                    for (int l = 0; l < 8; l++) {
-                        for (int m = 0; m < 8; m++) {
-                            for (int n = 0; n < 8; n++) {
-                                for (int o = 0; o < 8; o++) {
-                                    for (int p = 0; p < 8; p++) {
-                                        ArrayList<Integer> config = new ArrayList<>(
-                                                Arrays.asList(i, j, k, l, m, n, o, p));
-                                        if (checkConfigValidity(config)) {
-                                            printAsChessboard(config);
-                                            System.out.println(config);
-                                            System.out.println();
-                                            counter++;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        int[] config = new int[8];
+        generateConfigs(config, 0);
+    }
+
+    public static void generateConfigs(int[] config, int depth) {
+        if (depth == 8) {
+            ArrayList<Integer> configList = new ArrayList<>();
+            for (int i : config) {
+                configList.add(i);
+            }
+            if (checkConfigValidity(configList)) {
+                printAsChessboard(configList);
+                System.out.println(configList);
+                System.out.println();
+            }
+        } else {
+            for (int i = 0; i < 8; i++) {
+                config[depth] = i;
+                generateConfigs(config, depth + 1);
             }
         }
-
-        System.out.println(counter + " configs found.");
     }
 
     public static void findManyConfigs() {
