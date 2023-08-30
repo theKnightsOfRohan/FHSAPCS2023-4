@@ -10,6 +10,16 @@ public class D2 {
         findAllConfigs();
     }
 
+    /*
+     * Given a pair of numbers, an addition cycle is the process of adding the two
+     * numbers together, and then adding the ones digit of the result to the end of
+     * the list,
+     * and then repeating the process with the last two digits, and so on, until the
+     * first two digits are reached again.
+     * This is treated as one cycle, whose length is the number of times the process
+     * is repeated.
+     */
+
     public static int longestAdditionCycle() {
         int longestCycle = 0;
         int[] firstTwo = new int[2];
