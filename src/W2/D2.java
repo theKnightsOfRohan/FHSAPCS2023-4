@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import GeneralHelpers.Annotations.HelperMethod;
+import GeneralHelpers.Annotations.RunnableMethod;
+
 public class D2 {
     public static void main(String[] args) {
         findAllConfigs();
@@ -43,7 +46,7 @@ public class D2 {
         int shortestCycle = 100;
         int[] firstTwo = new int[2];
         for (int i = 0; i < 10; i++) {
-            for (int j = i; j < 10; j++) {
+            for (int j = 0; j < 10; j++) {
                 int length = lengthOfAdditionCycle(new int[] { i, j });
                 System.out.println("[" + i + ", " + j + "]: " + length);
                 if (length < shortestCycle) {
@@ -62,7 +65,7 @@ public class D2 {
         // Key = length, Value = number of pairs with that length
         HashMap<Integer, Integer> lengths = new HashMap<>();
         for (int i = 0; i < 10; i++) {
-            for (int j = i; j < 10; j++) {
+            for (int j = 0; j < 10; j++) {
                 int length = lengthOfAdditionCycle(new int[] { i, j });
                 if (!lengths.containsKey(length))
                     lengths.put(length, 1);
@@ -77,7 +80,7 @@ public class D2 {
 
     public static int lengthOfAdditionCycle(int[] firstTwo) {
         int[] lastTwo = Arrays.copyOf(firstTwo, 2);
-        int counter = 2;
+        int counter = 0;
         int placeholder;
         do {
             placeholder = lastTwo[1];
@@ -86,7 +89,7 @@ public class D2 {
             counter++;
         } while (!Arrays.equals(firstTwo, lastTwo));
 
-        return counter - 2;
+        return counter;
     }
 
     /*
@@ -98,11 +101,14 @@ public class D2 {
      * and each index represents the row (0-7).
      */
 
+    // Public methods are runnable, private methods are helpers
+    @RunnableMethod(description = "Find all configuration of 8 queens in which each queen does not threaten any other queen.")
     public static void findAllConfigs() {
         int[] config = new int[8];
         generateConfigs(config, 0);
     }
 
+    @RunnableMethod
     public static void generateConfigs(int[] config, int depth) {
         if (depth == 8) {
             ArrayList<Integer> configList = new ArrayList<>();
@@ -122,14 +128,16 @@ public class D2 {
         }
     }
 
+    @RunnableMethod
     public static void findManyConfigs() {
         HashSet<ArrayList<Integer>> configs = new HashSet<>();
         for (int i = 0; i < 100; i++) {
-            configs.add(queenThreatenConfig());
+            configs.add(randomQueenThreatenConfig());
         }
     }
 
-    public static ArrayList<Integer> queenThreatenConfig() {
+    @RunnableMethod
+    public static ArrayList<Integer> randomQueenThreatenConfig() {
         ArrayList<Integer> config = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             config.add(i);
@@ -147,6 +155,7 @@ public class D2 {
         return config;
     }
 
+    @HelperMethod
     private static boolean checkConfigValidity(ArrayList<Integer> config) {
         boolean isValid = true;
         for (int i = 0; i < 7; i++) {
@@ -162,6 +171,7 @@ public class D2 {
         return isValid;
     }
 
+    @HelperMethod
     private static void printAsChessboard(ArrayList<Integer> config) {
         for (int i = 0; i < 8; i++) {
             System.out.print("|");
@@ -175,7 +185,8 @@ public class D2 {
         }
     }
 
-    public static boolean queenThreatensSquare(int row, int col, int queenRow, int queenCol) {
+    @HelperMethod
+    private static boolean queenThreatensSquare(int row, int col, int queenRow, int queenCol) {
         if (row == queenRow || col == queenCol)
             return true;
         if (Math.abs(row - queenRow) == Math.abs(col - queenCol))
@@ -183,7 +194,8 @@ public class D2 {
         return false;
     }
 
-    public static void addRandomPositions(ArrayList<Integer> arr) {
+    @HelperMethod
+    private static void addRandomPositions(ArrayList<Integer> arr) {
         arr.clear();
         ArrayList<Integer> nums = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
