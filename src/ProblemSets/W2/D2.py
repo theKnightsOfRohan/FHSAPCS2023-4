@@ -15,16 +15,34 @@ def findAllConfigs():
     """
     configs = []
 
+    addToConfig(configs, [0, 0, 0, 0, 0, 0, 0, 0], 0)
+
     return configs
 
 
-def threatens(config, row, col):
+def addToConfig(configs, config, depth):
+    if depth == 8:
+        printAsBoard(config)
+        configs.append(config)
+        return config
+    else:
+        for col in range(8):
+            config[depth] = col
+            if not threatens(config, depth, col):
+                addToConfig(configs, config, depth + 1)
+
+
+def threatens(config, queenRow, queenCol):
     """
     Returns True if the queen at (row, col) threatens any other queen
     in the given configuration.
     """
-    for i in range(len(config)):
-        if config[i] == col or abs(i - row) == abs(config[i] - col):
+    for i in range(queenRow):
+        if (
+            config[i] == queenCol
+            or i == queenRow
+            or abs(i - queenRow) == abs(config[i] - queenCol)
+        ):
             return True
     return False
 
