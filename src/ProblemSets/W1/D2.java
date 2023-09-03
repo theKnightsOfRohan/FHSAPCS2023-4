@@ -1,4 +1,4 @@
-package W1;
+package ProblemSets.W1;
 
 import java.util.Arrays;
 
