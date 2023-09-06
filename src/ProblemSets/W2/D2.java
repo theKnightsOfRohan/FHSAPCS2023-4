@@ -10,7 +10,7 @@ import GeneralHelpers.Annotations.RunnableMethod;
 
 public class D2 {
     public static void main(String[] args) {
-        findAllConfigs();
+        findAllConfigsOptimally();
     }
 
     /*
@@ -101,6 +101,21 @@ public class D2 {
      * and each index represents the row (0-7).
      */
 
+    @RunnableMethod(description = "Find all configurations of 8 queens in which each queen does not threaten any other queen.")
+    public static void findAllConfigsOptimally() {
+        ArrayList<ArrayList<Integer>> configs = new ArrayList<>();
+        ArrayList<Integer> config = new ArrayList<>();
+        for (int i = 0; i < 8; i++)
+            config.add(0);
+
+        addToConfig(0, config, configs);
+        for (ArrayList<Integer> configuration : configs) {
+            printAsChessboard(configuration);
+            System.out.println(configuration);
+            System.out.println();
+        }
+    }
+
     // Public methods are runnable, private methods are helpers
     @RunnableMethod(description = "Find all configuration of 8 queens in which each queen does not threaten any other queen.")
     public static void findAllConfigs() {
@@ -156,6 +171,24 @@ public class D2 {
     }
 
     @HelperMethod
+    private static void addToConfig(int depth, ArrayList<Integer> config, ArrayList<ArrayList<Integer>> configs) {
+        if (depth == 8) {
+            configs.add(config);
+            printAsChessboard(config);
+        } else {
+            for (int i = 0; i < 8; i++) {
+                config.add(depth, i);
+                for (int j = 0; j < depth; j++) {
+                    if (queenThreatensSquare(depth, config.get(depth), j, config.get(j)))
+                        break;
+                    else
+                        addToConfig(depth + 1, config, configs);
+                }
+            }
+        }
+    }
+
+    @HelperMethod
     private static boolean checkConfigValidity(ArrayList<Integer> config) {
         boolean isValid = true;
         for (int i = 0; i < 7; i++) {
@@ -187,9 +220,7 @@ public class D2 {
 
     @HelperMethod
     private static boolean queenThreatensSquare(int row, int col, int queenRow, int queenCol) {
-        if (row == queenRow || col == queenCol)
-            return true;
-        if (Math.abs(row - queenRow) == Math.abs(col - queenCol))
+        if (row == queenRow || col == queenCol || Math.abs(row - queenRow) == Math.abs(col - queenCol))
             return true;
         return false;
     }
