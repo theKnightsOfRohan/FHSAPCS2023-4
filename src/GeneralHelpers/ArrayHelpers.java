@@ -42,4 +42,12 @@ public class ArrayHelpers {
         }
         return Arrays.copyOf(newArr, index);
     }
+
+    public static double getMax(double[] arr) {
+        double max = arr[0];
+        for (double d : arr)
+            if (d > max)
+                max = d;
+        return max;
+    }
 }
