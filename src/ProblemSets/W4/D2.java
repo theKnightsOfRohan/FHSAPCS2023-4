@@ -25,13 +25,9 @@ public class D2 {
         List<String[]> combinations = generateCombinations(operators, values);
 
         for (String[] combination : combinations) {
-            try {
-                double result = parseStringExpression(combination, operators);
-                if (result % 1 == 0 && result >= 0 && result <= 100 && !results.containsValue(result))
-                    results.put(convertPrefixToAlgebra(combination, operators), result);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            double result = parseStringExpression(combination, operators);
+            if (result % 1 == 0 && result >= 0 && result <= 100 && !results.containsValue(result))
+                results.put(convertPrefixToAlgebra(combination, operators), result);
         }
 
         return results;
@@ -56,7 +52,7 @@ public class D2 {
         return combinations;
     }
 
-    @RunnableMethod
+    @HelperMethod
     public static double parseStringExpression(String[] terms, String[] operations) {
         String[] workingTerms = Arrays.copyOf(terms, terms.length);
 
