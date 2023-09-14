@@ -2,7 +2,6 @@ package ProblemSets.W4;
 
 import GeneralHelpers.Annotations.HelperMethod;
 import GeneralHelpers.Annotations.RunnableMethod;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
@@ -11,11 +10,20 @@ import java.util.Arrays;
 
 public class D2 {
     public static void main(String[] args) {
-        String[] operators = new String[] { "+", "-", "*", "/", "^" };
+        String[] operators = new String[] { "+", "-", "*", "/", "^", "√", "%" };
         String[] values = { "4", "4", "4", "4" };
 
         HashMap<String, Double> results = computeAllCombos(operators, values);
         System.out.println(results);
+
+        int counter = 0;
+        for (double i = 0; i < 100; i++)
+            if (results.containsValue(i)) {
+                System.out.println(i);
+                counter++;
+            }
+
+        System.out.println(counter);
     }
 
     @RunnableMethod
@@ -93,9 +101,14 @@ public class D2 {
             return String.valueOf(Double.parseDouble(operand1) / Double.parseDouble(operand2));
         case "^":
             return String.valueOf(Math.pow(Double.parseDouble(operand1), Double.parseDouble(operand2)));
-        default:
-            throw new IllegalArgumentException("Invalid operator");
+        case "√":
+            return String.valueOf(Math.pow(Double.parseDouble(operand2), 1 / Double.parseDouble(operand1)));
+        case "log":
+            return String.valueOf(Math.log(Double.parseDouble(operand2)) / Math.log(Double.parseDouble(operand1)));
+        case "%":
+            return String.valueOf(Double.parseDouble(operand1) % Double.parseDouble(operand2));
         }
+        throw new IllegalArgumentException("Invalid operator");
     }
 
     @HelperMethod
