@@ -9,7 +9,7 @@ import GeneralHelpers.Annotations.RunnableMethod;
 
 public class D3 {
     public static void main(String[] args) {
-        int roadLength = 200;
+        int roadLength = 20;
         int mixStepNum = 1000;
         int numCars = 5;
         int maxVelocity = 5;
@@ -73,21 +73,27 @@ public class D3 {
             for (int j = 0; j < workingSimulation.length; j++) {
                 Car car = workingSimulation[j];
                 if (car != null) {
-                    int oldPosition = car.position;
-                    car.step(workingSimulation);
-                    int newPosition = car.position;
-                    workingSimulation[oldPosition] = null;
-                    workingSimulation[newPosition] = car;
-
-                    if (newPosition > oldPosition)
-                        totalDistanceTraveled += newPosition - oldPosition;
-                    else
-                        totalDistanceTraveled += newPosition + workingSimulation.length - oldPosition;
+                    totalDistanceTraveled = getNewPosition(totalDistanceTraveled, workingSimulation, car);
                 }
             }
             printRoad(workingSimulation);
         }
 
+        return totalDistanceTraveled;
+    }
+
+    @HelperMethod
+    private static int getNewPosition(int totalDistanceTraveled, Car[] workingSimulation, Car car) {
+        int oldPosition = car.position;
+        car.step(workingSimulation);
+        int newPosition = car.position;
+        workingSimulation[oldPosition] = null;
+        workingSimulation[newPosition] = car;
+
+        if (newPosition > oldPosition)
+            totalDistanceTraveled += newPosition - oldPosition;
+        else
+            totalDistanceTraveled += newPosition + workingSimulation.length - oldPosition;
         return totalDistanceTraveled;
     }
 

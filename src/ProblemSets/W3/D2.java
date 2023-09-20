@@ -33,18 +33,18 @@ public class D2 {
         for (int i = 0; i < steps; i++) {
             int dir = (int) (Math.random() * 4);
             switch (dir) {
-                case 0:
-                    x++;
-                    break;
-                case 1:
-                    x--;
-                    break;
-                case 2:
-                    y++;
-                    break;
-                case 3:
-                    y--;
-                    break;
+            case 0:
+                x++;
+                break;
+            case 1:
+                x--;
+                break;
+            case 2:
+                y++;
+                break;
+            case 3:
+                y--;
+                break;
             }
         }
 
@@ -77,10 +77,10 @@ public class D2 {
         for (int i = 0; i < steps; i++) {
             int dir = (int) (Math.random() * 4);
             switch (dir) {
-                case 0 -> x++;
-                case 1 -> x--;
-                case 2 -> y++;
-                case 3 -> y--;
+            case 0 -> x++;
+            case 1 -> x--;
+            case 2 -> y++;
+            case 3 -> y--;
             }
 
             if (!visited.add(x + "," + y))
@@ -116,12 +116,12 @@ public class D2 {
         for (int i = 0; i < steps; i++) {
             int dir = (int) (Math.random() * 6);
             switch (dir) {
-                case 0 -> x++;
-                case 1 -> x--;
-                case 2 -> y++;
-                case 3 -> y--;
-                case 4 -> z++;
-                case 5 -> z--;
+            case 0 -> x++;
+            case 1 -> x--;
+            case 2 -> y++;
+            case 3 -> y--;
+            case 4 -> z++;
+            case 5 -> z--;
             }
 
             if (!visited.add(x + "," + y + "," + z))
@@ -135,7 +135,7 @@ public class D2 {
     public static void averageOfDisplacement3DDataTable(int trials, int steps) {
         System.out.println("Steps\tAverage Displacement");
         for (int i = 1; i <= steps; i++) {
-            System.out.println(averageOfDisplacement3D(trials, i));
+            System.out.println(i + "\t" + averageOfDisplacement3D(trials, i));
         }
     }
 
