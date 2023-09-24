@@ -5,7 +5,7 @@ import GeneralHelpers.Annotations.RunnableMethod;
 
 public class Plinko {
     // Basic constants
-    final static int TRIALS = 10000;
+    final static int TRIALS = 100000;
     final static int WIDTH = 11;
     final static double HALF_WIDTH = WIDTH / 2;
 
@@ -18,8 +18,64 @@ public class Plinko {
     public static void displayFullTable(int start, int end, int trials) {
         System.out.println("Pegs\tLoc\tMoney");
         for (int i = start; i <= end; i++) {
-            System.out.println(i + "\t" + getAverageValue(i, trials) + "\t" + getAverageMoney(i, trials));
+            System.out.println(i + "\t" + getAverageLocsAndMoney(i, trials));
         }
+    }
+
+    // Gets the average location of the puck and the average money won for a given
+    // simulation
+    @HelperMethod
+    private static String getAverageLocsAndMoney(int pegs, int trials) {
+        double[] sums = new double[2];
+
+        for (int i = 0; i < trials; i++) {
+            int[] results = runSimulationLocsAndMoney(pegs);
+            sums[0] += results[0];
+            sums[1] += results[1];
+        }
+
+        return sums[0] / trials + "\t" + sums[1] / trials;
+    }
+
+    // Runs a simulation of the puck falling through that number of pegs, then
+    // calculates the money they won and the location of the puck
+    @HelperMethod
+    private static int[] runSimulationLocsAndMoney(int pegs) {
+        int loc = 0;
+        int money = 0;
+
+        for (int i = 0; i < pegs; i++) {
+            if (Math.random() < 0.5)
+                if (loc < HALF_WIDTH)
+                    loc++;
+                else if (loc > -HALF_WIDTH)
+                    loc--;
+        }
+
+        switch (Math.abs(loc)) {
+            case 0:
+                money = 10;
+                break;
+            case 1:
+                money = 0;
+                break;
+            case 2:
+                money = 5;
+                break;
+            case 3:
+                money = 3;
+                break;
+            case 4:
+                money = 2;
+                break;
+            case 5:
+                money = 1;
+                break;
+            default:
+                throw new RuntimeException("Invalid location: " + loc);
+        }
+
+        return new int[] { Math.abs(loc), money };
     }
 
     // Create a table of the average location of the puck for each number of pegs
