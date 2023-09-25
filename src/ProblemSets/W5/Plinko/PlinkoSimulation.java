@@ -1,9 +1,9 @@
-package ProblemSets.W5.Extras;
+package ProblemSets.W5.Plinko;
 
 import GeneralHelpers.Annotations.HelperMethod;
 import GeneralHelpers.Annotations.RunnableMethod;
 
-public class Plinko {
+public class PlinkoSimulation {
     // Basic constants
     final static int TRIALS = 100000;
     final static int WIDTH = 11;
@@ -46,10 +46,14 @@ public class Plinko {
 
         for (int i = 0; i < pegs; i++) {
             if (Math.random() < 0.5)
-                if (loc < HALF_WIDTH)
-                    loc++;
-                else if (loc > -HALF_WIDTH)
-                    loc--;
+                loc++;
+            else
+                loc--;
+
+            if (loc > HALF_WIDTH)
+                loc = (int) HALF_WIDTH;
+            if (loc < -HALF_WIDTH)
+                loc = (int) -HALF_WIDTH;
         }
 
         switch (Math.abs(loc)) {
