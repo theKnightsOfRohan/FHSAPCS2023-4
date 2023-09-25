@@ -5,12 +5,22 @@ import GeneralHelpers.Annotations.RunnableMethod;
 
 public class PlinkoSimulation {
     // Basic constants
-    final static int TRIALS = 100000;
+    final static int TRIALS = 100;
     final static int WIDTH = 11;
     final static double HALF_WIDTH = WIDTH / 2;
+    final static int PEGS = 10;
 
     public static void main(String[] args) {
-        displayFullTable(1, 20, TRIALS);
+        int[] locs = new int[TRIALS];
+        int[] money = new int[TRIALS];
+
+        for (int i = 0; i < TRIALS; i++) {
+            int[] results = runSimulationLocsAndMoney(PEGS);
+            locs[i] = results[0];
+            money[i] = results[1];
+        }
+
+        SaveResults.create(PEGS, locs, money);
     }
 
     // Create a table of both the average location of the puck and the average money
