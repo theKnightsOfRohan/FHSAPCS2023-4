@@ -5,7 +5,7 @@ import GeneralHelpers.Annotations.RunnableMethod;
 
 public class PlinkoSimulation {
     // Basic constants
-    final static int TRIALS = 100;
+    final static int TRIALS = 10000;
     final static int WIDTH = 11;
     final static double HALF_WIDTH = WIDTH / 2;
     final static int PEGS = 10;

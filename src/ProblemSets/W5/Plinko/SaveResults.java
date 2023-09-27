@@ -12,6 +12,19 @@ import GeneralHelpers.Annotations.HelperMethod;
 import GeneralHelpers.Annotations.RunnableMethod;
 
 public class SaveResults {
+    /**
+     * This method creates a JSON object containing the results of a Plinko game
+     * simulation. The object includes the number of pegs used in the simulation,
+     * the results of the simulation, the mean of the results, the median of the
+     * results, and the sample deviation of the results. The JSON object is then
+     * written to a file named "results.json" in the specified file path.
+     *
+     * @param pegNum the number of pegs used in the simulation
+     * @param locs   an array of integers representing the locations where the
+     *               Plinko chips landed
+     * @param money  an array of integers representing the amount of money won for
+     *               each Plinko chip
+     */
     @RunnableMethod
     public static void create(int pegNum, int[] locs, int[] money) {
         JSONObject obj = new JSONObject();
@@ -20,7 +33,7 @@ public class SaveResults {
         obj.put("results", createList(locs, money));
         obj.put("mean", calcAverage(locs, money));
         obj.put("median", calcMedian(locs, money));
-        obj.put("sample deviations", calculateSampleDeviations(locs, money));
+        obj.put("sample deviation", calculateSampleDeviations(locs, money));
 
         try (FileWriter file = new FileWriter("src/ProblemSets/W5/Plinko/results.json")) {
             file.write(obj.toString());
@@ -29,6 +42,13 @@ public class SaveResults {
         }
     }
 
+    /**
+     * Calculates the median of the given arrays of locations and money.
+     * 
+     * @param locs  the array of locations
+     * @param money the array of money
+     * @return a JSONObject containing the median location and median money
+     */
     @HelperMethod
     private static JSONObject calcMedian(int[] locs, int[] money) {
         int[] locsCopy = locs.clone();
@@ -50,6 +70,15 @@ public class SaveResults {
         return obj;
     }
 
+    /**
+     * Calculates the sample deviations of the given arrays of Plinko locations and
+     * money amounts.
+     * 
+     * @param locs  An array of Plinko locations.
+     * @param money An array of Plinko money amounts.
+     * @return A JSONObject containing the sample deviations for the Plinko
+     *         locations and money amounts.
+     */
     @HelperMethod
     private static JSONObject calculateSampleDeviations(int[] locs, int[] money) {
         double[] sums = new double[2]; // locs, money
@@ -73,6 +102,17 @@ public class SaveResults {
         return obj;
     }
 
+    /**
+     * Creates a JSON array of objects containing the location and money earned for
+     * each Plinko chip drop.
+     * 
+     * @param locs  an array of integers representing the location of each Plinko
+     *              chip drop
+     * @param money an array of integers representing the money earned for each
+     *              Plinko chip drop
+     * @return a JSON array of objects containing the location and money earned for
+     *         each Plinko chip drop
+     */
     @HelperMethod
     private static JSONArray createList(int[] locs, int[] money) {
         JSONArray list = new JSONArray();
@@ -87,6 +127,14 @@ public class SaveResults {
         return list;
     }
 
+    /**
+     * Calculates the average location and money earned for a Plinko game.
+     * 
+     * @param locs  an array of integers representing the location of each ball drop
+     * @param money an array of integers representing the money earned for each ball
+     *              drop
+     * @return a JSONObject containing the average location and money earned
+     */
     @HelperMethod
     private static JSONObject calcAverage(int[] locs, int[] money) {
         double[] sums = new double[2];
