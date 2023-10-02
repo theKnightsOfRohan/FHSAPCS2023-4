@@ -2,6 +2,7 @@ package ProblemSets.W7.AntSimulation;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,8 +103,9 @@ public class Ant {
     private void search(HashMap<String, Integer> coordinatesToPheromones) {
         int currX = this.location[0];
         int currY = this.location[1];
-        int[][] surroundingCoords = new int[][] { { currX - 1, currY - 1 }, { currX - 1, currY }, { currX - 1, currY + 1 }, { currX, currY - 1 },
-                { currX, currY + 1 }, { currX + 1, currY - 1 }, { currX + 1, currY }, { currX + 1, currY + 1 } };
+        ArrayList<int[]> surroundingCoords = new ArrayList<>(Arrays.asList(new int[] { currX - 1, currY - 1 }, new int[] { currX - 1, currY },
+                new int[] { currX - 1, currY + 1 }, new int[] { currX, currY - 1 }, new int[] { currX, currY + 1 },
+                new int[] { currX + 1, currY - 1 }, new int[] { currX + 1, currY }, new int[] { currX + 1, currY + 1 }));
 
         int[] newCoords = findWeightedRandomCoords(surroundingCoords, coordinatesToPheromones);
         this.location = newCoords;
@@ -121,10 +123,16 @@ public class Ant {
      * @return an array of two integers representing the randomly selected
      *         coordinate
      */
-    private int[] findWeightedRandomCoords(int[][] surroundingCoords, HashMap<String, Integer> coordinatesToPheromones) {
+    private int[] findWeightedRandomCoords(ArrayList<int[]> surroundingCoords, HashMap<String, Integer> coordinatesToPheromones) {
         ArrayList<Integer[]> weights = new ArrayList<>();
         int totalPheromones = 0;
+        if (this.visitedLocations.size() != 0) {
+            int[] prevLocation = parseCoordinateString(visitedLocations.peek());
+            surroundingCoords.remove(prevLocation);
+        }
         for (int[] coords : surroundingCoords) {
+            if (coords[0] < 0 || coords[0] > Settings.WIDTH || coords[1] < 0 || coords[1] > Settings.HEIGHT)
+                continue;
             String key = Arrays.toString(coords);
             int pheromones = coordinatesToPheromones.get(key);
             totalPheromones += pheromones;
@@ -138,6 +146,17 @@ public class Ant {
         Integer[] randomCoords = weights.get(randomIndex);
 
         return new int[] { randomCoords[0], randomCoords[1] };
+    }
+
+    /**
+     * Parses a string representing a coordinate in the format "(x, y)" and returns
+     * an integer array containing the x and y values.
+     * 
+     * @param string the string representing the coordinate
+     * @return an integer array containing the x and y values of the coordinate
+     */
+    private int[] parseCoordinateString(String string) {
+        return Arrays.stream(string.substring(1, string.length() - 1).split(", ")).mapToInt(Integer::parseInt).toArray();
     }
 
     /**
