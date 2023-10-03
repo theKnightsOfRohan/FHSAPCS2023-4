@@ -12,7 +12,7 @@ public class Main extends PApplet {
     public void setup() {
         background(255);
         frameRate(60);
-        simulation = new Simulation();
+        simulation = Simulation.getInstance();
     }
 
     public void draw() {

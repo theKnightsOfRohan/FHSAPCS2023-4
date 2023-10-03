@@ -3,16 +3,24 @@ package ProblemSets.W7.AntSimulation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Simulation {
     private static ArrayList<Ant> ants;
     private static HashMap<String, Integer> coordinatesToPheromones;
-    private static HashMap<String, Boolean> coordinatesToFood;
+    private static HashSet<String> coordinatesToFood;
+    private static Simulation instance;
 
-    public Simulation() {
+    public static Simulation getInstance() {
+        if (instance == null)
+            instance = new Simulation();
+        return instance;
+    }
+
+    private Simulation() {
         ants = new ArrayList<Ant>();
         coordinatesToPheromones = new HashMap<String, Integer>();
-        coordinatesToFood = new HashMap<String, Boolean>();
+        coordinatesToFood = new HashSet<String>();
         initializeAllAnts();
         initializeAllPheromones();
         initializeAllFood();
@@ -28,14 +36,12 @@ public class Simulation {
             ant.act(coordinatesToPheromones, coordinatesToFood, main);
         }
 
-        for (String key : coordinatesToFood.keySet()) {
+        for (String key : coordinatesToFood) {
             int[] coordinates = Arrays.stream(key.substring(1, key.length() - 1).split(", ")).mapToInt(Integer::parseInt).toArray();
             int x = coordinates[0];
             int y = coordinates[1];
-            if (coordinatesToFood.get(key)) {
-                main.fill(150, 75, 0);
-                main.ellipse(x, y, 5, 5);
-            }
+            main.fill(150, 75, 0);
+            main.ellipse(x, y, 5, 5);
         }
     }
 
@@ -72,7 +78,7 @@ public class Simulation {
         for (int i = 0; i < Settings.NUM_FOOD; i++) {
             int x = (int) (Math.random() * Settings.WIDTH);
             int y = (int) (Math.random() * Settings.HEIGHT);
-            coordinatesToFood.put(Arrays.toString(new int[] { x, y }), true);
+            coordinatesToFood.add(Arrays.toString(new int[] { x, y }));
         }
     }
 }

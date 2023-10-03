@@ -2,45 +2,50 @@ package ProblemSets.W7.AntSimulation;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Stack;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EmptyStackException;
 
 public class Ant {
     private int[] location;
+    private int[] originalLocation;
     private Stack<String> visitedLocations;
     private boolean foundFood;
 
     public Ant(int x, int y) {
         this.location = new int[] { x, y };
+        this.originalLocation = new int[] { x, y };
         this.visitedLocations = new Stack<String>();
+        this.visitedLocations.push(Arrays.toString(this.location));
         this.foundFood = false;
     }
 
     /**
-     * This method represents the behavior of an ant. If the ant has found food, it
-     * will return to the spawn point by following the pheromones trail. If the ant
-     * has not found food, it will search for food by following the pheromones
-     * trail. If the ant finds food, it will set the foundFood flag to true. If the
-     * ant does not find food, it will push the current location to the
-     * visitedLocations stack. The method also updates the pheromones trail and
-     * displays the ant on the screen.
+     * This method represents the behavior of an ant in the simulation. If the ant
+     * has found food, it checks if it has returned to its spawn point. If it has,
+     * it sets the foundFood flag to false. If the ant has not found food, it
+     * searches for food and checks if it has found any. If it has found food, it
+     * sets the foundFood flag to true. If it has not found food, it adds its
+     * current location to the visitedLocations stack. The method also updates the
+     * pheromones in the coordinatesToPheromones HashMap. Finally, it draws an
+     * ellipse representing the ant's location on the screen using the Main object
+     * passed as a parameter.
      * 
-     * @param coordinatesToPheromones a HashMap that maps coordinates to the amount
-     *                                of pheromones at that location
-     * @param coordinatesToFood       a HashMap that maps coordinates to a boolean
-     *                                indicating whether there is food at that
-     *                                location
-     * @param main                    the Main object representing the main program
+     * @param coordinatesToPheromones a HashMap containing the pheromone levels for
+     *                                each coordinate in the simulation
+     * @param coordinatesToFood       a HashSet containing the coordinates of all
+     *                                the food sources in the simulation
+     * @param main                    a Main object representing the main class of
+     *                                the simulation
      */
-    public void act(HashMap<String, Integer> coordinatesToPheromones, HashMap<String, Boolean> coordinatesToFood, Main main) {
+    public void act(HashMap<String, Integer> coordinatesToPheromones, HashSet<String> coordinatesToFood, Main main) {
         if (this.foundFood) {
             if (this.returnToSpawn(coordinatesToPheromones)) {
                 this.foundFood = false;
             }
         } else {
-            this.search(coordinatesToPheromones);
+            this.search(coordinatesToPheromones, coordinatesToFood);
             if (this.findsFood(coordinatesToFood))
                 this.foundFood = true;
             else {
@@ -55,11 +60,10 @@ public class Ant {
     }
 
     /**
-     * This method is used to make the ant return to its spawn point. If the ant has
-     * not visited any locations, it sets the foundFood variable to false and
-     * returns true. Otherwise, it pops the last visited location from the
-     * visitedLocations stack, updates the ant's location and pheromones, and
-     * returns false.
+     * This method checks if the ant has visited any locations. If it has not, it
+     * sets the foundFood variable to false and returns true. Otherwise, it pops the
+     * last visited location from the stack, updates the ant's location and
+     * pheromones, and returns false.
      * 
      * @param coordinatesToPheromones a HashMap that maps coordinates to pheromone
      *                                levels
@@ -72,80 +76,166 @@ public class Ant {
         }
 
         String lastLocation = this.visitedLocations.pop();
-        String[] lastLocationArr = lastLocation.substring(1, lastLocation.length() - 1).split(", ");
-        int[] lastLocationInts = new int[] { Integer.parseInt(lastLocationArr[0]), Integer.parseInt(lastLocationArr[1]) };
+        int[] lastLocationInts = parseCoordinateString(lastLocation);
         this.location = lastLocationInts;
         this.updatePheromones(coordinatesToPheromones);
         return false;
     }
 
     /**
-     * Checks if the current location of the ant has food.
+     * Checks if the current ant's location is in the set of coordinates to food.
      * 
-     * @param coordinatesToFood a HashMap containing the coordinates of the food as
-     *                          keys and a boolean value indicating if the food is
-     *                          present at that location.
-     * @return true if the current location of the ant has food, false otherwise.
+     * @param coordinatesToFood the set of coordinates to food
+     * @return true if the current ant's location is in the set of coordinates to
+     *         food, false otherwise
      */
-    private boolean findsFood(HashMap<String, Boolean> coordinatesToFood) {
+    private boolean findsFood(HashSet<String> coordinatesToFood) {
         String key = this.locString();
-        return coordinatesToFood.containsKey(key);
+        return coordinatesToFood.contains(key);
     }
 
     /**
-     * This method searches for the next location for the ant to move to based on
-     * the pheromone levels of the surrounding coordinates. It uses a weighted
-     * random selection algorithm to choose the next location.
+     * This method searches for food and updates the ant's location accordingly. It
+     * takes in a HashMap of coordinates to pheromone levels and a HashSet of
+     * coordinates to food. It finds the closest coordinates to food among the
+     * surrounding coordinates and moves towards them in direct proportion to the
+     * pheromone levels at those coordinates.
      * 
-     * @param coordinatesToPheromones a HashMap that maps coordinates to their
-     *                                corresponding pheromone levels
+     * @param coordinatesToPheromones a HashMap of coordinates to pheromone levels
+     * @param coordinatesToFood       a HashSet of coordinates to food
      */
-    private void search(HashMap<String, Integer> coordinatesToPheromones) {
+    private void search(HashMap<String, Integer> coordinatesToPheromones, HashSet<String> coordinatesToFood) {
         int currX = this.location[0];
         int currY = this.location[1];
         ArrayList<int[]> surroundingCoords = new ArrayList<>(Arrays.asList(new int[] { currX - 1, currY - 1 }, new int[] { currX - 1, currY },
                 new int[] { currX - 1, currY + 1 }, new int[] { currX, currY - 1 }, new int[] { currX, currY + 1 },
                 new int[] { currX + 1, currY - 1 }, new int[] { currX + 1, currY }, new int[] { currX + 1, currY + 1 }));
 
-        int[] newCoords = findWeightedRandomCoords(surroundingCoords, coordinatesToPheromones);
+        int[][] closestCoords = findClosestCoords(coordinatesToFood, surroundingCoords, 3);
+        int[] newCoords = findDirectProportionCoords(closestCoords, coordinatesToPheromones);
         this.location = newCoords;
     }
 
     /**
-     * Finds a random coordinate from the given surrounding coordinates based on the
-     * amount of pheromones at each coordinate. The coordinates with more pheromones
-     * have a higher chance of being selected.
+     * Finds the coordinates of the closest proportionally weighted location based
+     * on pheromones, distance from previous location, and distance from original
+     * location.
      * 
-     * @param surroundingCoords       the array of surrounding coordinates to choose
-     *                                from
-     * @param coordinatesToPheromones the mapping of coordinates to the amount of
-     *                                pheromones at each coordinate
-     * @return an array of two integers representing the randomly selected
-     *         coordinate
+     * @param closestCoords           an array of coordinates representing the
+     *                                closest locations to the ant's current
+     *                                location
+     * @param coordinatesToPheromones a HashMap containing the pheromone levels for
+     *                                each coordinate
+     * @return an array of integers representing the coordinates of the randomly
+     *         selected location
      */
-    private int[] findWeightedRandomCoords(ArrayList<int[]> surroundingCoords, HashMap<String, Integer> coordinatesToPheromones) {
-        ArrayList<Integer[]> weights = new ArrayList<>();
-        int totalPheromones = 0;
-        if (this.visitedLocations.size() != 0) {
-            int[] prevLocation = parseCoordinateString(visitedLocations.peek());
-            surroundingCoords.remove(prevLocation);
-        }
-        for (int[] coords : surroundingCoords) {
-            if (coords[0] < 0 || coords[0] > Settings.WIDTH || coords[1] < 0 || coords[1] > Settings.HEIGHT)
-                continue;
-            String key = Arrays.toString(coords);
-            int pheromones = coordinatesToPheromones.get(key);
-            totalPheromones += pheromones;
+    private int[] findDirectProportionCoords(int[][] closestCoords, HashMap<String, Integer> coordinatesToPheromones) {
+        int totalWeightage = 0;
+        double minDistance = Double.MAX_VALUE;
 
-            for (int i = 0; i < pheromones; i++) {
-                weights.add(new Integer[] { coords[0], coords[1] });
+        for (int[] coord : closestCoords) {
+            String key = Arrays.toString(coord);
+            int pheromones = coordinatesToPheromones.get(key);
+            int currentWeightage = pheromones * distanceFromPreviousLocation(coord) * distanceFromOriginalLocation(coord);
+            totalWeightage += currentWeightage;
+            double distanceToFood = Math.sqrt(Math.pow(coord[0] - closestCoords[0][0], 2) + Math.pow(coord[1] - closestCoords[0][1], 2));
+            if (distanceToFood < minDistance) {
+                minDistance = distanceToFood;
             }
         }
 
-        int randomIndex = (int) (Math.random() * totalPheromones);
-        Integer[] randomCoords = weights.get(randomIndex);
+        int randomIndex = (int) (Math.random() * totalWeightage);
+        int[] randomCoords = null;
+        int currentWeightage = 0;
 
-        return new int[] { randomCoords[0], randomCoords[1] };
+        for (int[] coord : closestCoords) {
+            String key = Arrays.toString(coord);
+            int pheromones = coordinatesToPheromones.get(key);
+            int weightage = pheromones * distanceFromPreviousLocation(coord) * distanceFromOriginalLocation(coord);
+            double distanceToFood = Math.sqrt(Math.pow(coord[0] - closestCoords[0][0], 2) + Math.pow(coord[1] - closestCoords[0][1], 2));
+            double proportion = distanceToFood / minDistance;
+            int adjustedWeightage = (int) (proportion * weightage);
+            if (randomIndex >= currentWeightage && randomIndex < currentWeightage + adjustedWeightage) {
+                randomCoords = coord;
+                break;
+            }
+            currentWeightage += adjustedWeightage;
+        }
+
+        return randomCoords;
+    }
+
+    /**
+     * Finds the closest coordinates to the food source from a given set of
+     * surrounding coordinates.
+     * 
+     * @param coordinatesToFood a HashSet of strings representing the coordinates of
+     *                          the food source
+     * @param surroundingCoords an ArrayList of integer arrays representing the
+     *                          surrounding coordinates
+     * @param numClosest        an integer representing the number of closest
+     *                          coordinates to find
+     * @return a 2D integer array representing the closest coordinates to the food
+     *         source
+     */
+    private int[][] findClosestCoords(HashSet<String> coordinatesToFood, ArrayList<int[]> surroundingCoords, int numClosest) {
+        int[][] closestCoords = new int[numClosest][2];
+        double[] closestDistances = new double[numClosest];
+        Arrays.fill(closestDistances, Double.MAX_VALUE);
+
+        for (String key : coordinatesToFood) {
+            int[] foodCoords = parseCoordinateString(key);
+            for (int[] coord : surroundingCoords) {
+                double distance = Math.sqrt(Math.pow(coord[0] - foodCoords[0], 2) + Math.pow(coord[1] - foodCoords[1], 2));
+                for (int i = 0; i < numClosest; i++) {
+                    if (distance < closestDistances[i]) {
+                        for (int j = numClosest - 1; j > i; j--) {
+                            closestDistances[j] = closestDistances[j - 1];
+                            closestCoords[j] = closestCoords[j - 1];
+                        }
+                        closestDistances[i] = distance;
+                        closestCoords[i] = coord;
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        return closestCoords;
+    }
+
+    /**
+     * Calculates the distance between the current location of the ant and its
+     * previous location. If the ant has not visited any location before, the
+     * distance is considered to be 1.
+     * 
+     * @param coord an integer array representing the current location of the ant
+     * @return an integer representing the distance between the current location and
+     *         the previous location of the ant
+     */
+    private int distanceFromPreviousLocation(int[] coord) {
+        String previousLocation;
+        try {
+            previousLocation = this.visitedLocations.peek();
+        } catch (EmptyStackException e) {
+            return 1;
+        }
+
+        int[] prevLocation = parseCoordinateString(previousLocation);
+        return Math.abs(coord[0] - prevLocation[0]) + Math.abs(coord[1] - prevLocation[1]);
+    }
+
+    /**
+     * Calculates the Manhattan distance between the given coordinates and the
+     * original location of the ant.
+     * 
+     * @param coord the coordinates to calculate the distance from
+     * @return the Manhattan distance between the given coordinates and the original
+     *         location of the ant
+     */
+    private int distanceFromOriginalLocation(int[] coord) {
+        return Math.abs(coord[0] - this.originalLocation[0]) + Math.abs(coord[1] - this.originalLocation[1]);
     }
 
     /**
