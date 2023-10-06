@@ -15,9 +15,14 @@ public class Coordinate {
         this.pheromones++;
     }
 
-    // Returns number of squares an ant would have to travel to get to this
-    // coordinate
-    // from the given coordinate, including diagonals.
+    /**
+     * Calculates the travel distance between this coordinate and the given
+     * coordinate. The travel distance is the maximum of the absolute differences
+     * between the x and y coordinates.
+     *
+     * @param coordinate the coordinate to calculate the travel distance to
+     * @return the travel distance between this coordinate and the given coordinate
+     */
     public int getTravelDistance(Coordinate coordinate) {
         int xDistance = Math.abs(this.x - coordinate.x);
         int yDistance = Math.abs(this.y - coordinate.y);
