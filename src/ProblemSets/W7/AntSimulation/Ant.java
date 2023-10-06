@@ -9,105 +9,113 @@ import java.util.Arrays;
 import java.util.EmptyStackException;
 
 public class Ant {
-    private int[] location;
-    private int[] originalLocation;
-    private Stack<String> visitedLocations;
+    private Coordinate location;
+    private Coordinate originalLocation;
+    private Stack<Coordinate> visitedLocations;
     private boolean foundFood;
 
-    public Ant(int x, int y) {
-        this.location = new int[] { x, y };
-        this.originalLocation = new int[] { x, y };
-        this.visitedLocations = new Stack<String>();
-        this.visitedLocations.push(Arrays.toString(this.location));
+    public Ant(Coordinate coordinate) {
+        this.location = coordinate;
+        this.originalLocation = coordinate;
+        this.visitedLocations = new Stack<Coordinate>();
+        this.visitedLocations.push(this.location);
         this.foundFood = false;
     }
 
-    public void act(HashMap<String, Integer> coordinatesToPheromones, HashSet<String> coordinatesToFood, Main main) {
+    public void act(List<Coordinate> coordinates, HashSet<Coordinate> coordinatesWithFood, Main main) {
         if (this.foundFood) {
-            if (this.returnToSpawn(coordinatesToPheromones)) {
+            if (this.returnToSpawn(coordinates)) {
                 this.foundFood = false;
             }
         } else {
-            this.search(coordinatesToPheromones, coordinatesToFood);
-            if (this.findsFood(coordinatesToFood)) {
+            this.search(coordinates, coordinatesWithFood);
+            if (this.findsFood(coordinatesWithFood)) {
                 this.foundFood = true;
-                coordinatesToFood.remove(this.locString());
+                coordinatesWithFood.remove(this.location);
             } else {
-                if (!this.visitedLocations.contains(this.locString()))
-                    this.visitedLocations.push(this.locString());
+                if (!this.visitedLocations.contains(this.location))
+                    this.visitedLocations.push(this.location);
             }
         }
 
-        this.updatePheromones(coordinatesToPheromones);
+        this.updatePheromones(coordinates);
 
         main.fill(0, 0, 0);
-        main.ellipse(this.location[0], this.location[1], 5, 5);
+        main.ellipse(this.location.x, this.location.y, 5, 5);
     }
 
-    private boolean returnToSpawn(HashMap<String, Integer> coordinatesToPheromones) {
+    private boolean returnToSpawn(List<Coordinate> coordinates) {
         if (this.visitedLocations.isEmpty()) {
             this.foundFood = false;
             return true;
         }
 
-        String lastLocation = this.visitedLocations.pop();
-        int[] lastLocationInts = parseCoordinateString(lastLocation);
-        this.location = lastLocationInts;
-        this.updatePheromones(coordinatesToPheromones);
+        this.location = this.visitedLocations.pop();
+        this.updatePheromones(coordinates);
         return false;
     }
 
-    private boolean findsFood(HashSet<String> coordinatesToFood) {
-        String key = this.locString();
-        return coordinatesToFood.contains(key);
+    private boolean findsFood(HashSet<Coordinate> coordinatesWithFood) {
+        return coordinatesWithFood.contains(this.location);
     }
 
-    private void search(HashMap<String, Integer> coordinatesToPheromones, HashSet<String> coordinatesToFood) {
-        int currX = this.location[0];
-        int currY = this.location[1];
-        ArrayList<int[]> surroundingCoords = new ArrayList<>(Arrays.asList(new int[] { currX - 1, currY - 1 }, new int[] { currX - 1, currY },
-                new int[] { currX - 1, currY + 1 }, new int[] { currX, currY - 1 }, new int[] { currX, currY + 1 },
-                new int[] { currX + 1, currY - 1 }, new int[] { currX + 1, currY }, new int[] { currX + 1, currY + 1 }));
+    private void search(List<Coordinate> coordinates, HashSet<Coordinate> coordinatesWithFood) {
+        ArrayList<Coordinate> surroundingCoords = getSurroundingCoords(coordinates);
 
-        int[][] closestCoords = findClosestCoords(coordinatesToFood, surroundingCoords, 3);
-        int[] newCoords = findDirectProportionCoords(closestCoords, coordinatesToPheromones);
+        Coordinate[] closestCoords = findClosestCoords(coordinatesWithFood, surroundingCoords, 3);
+        Coordinate newCoords = findDirectProportionCoords(closestCoords, coordinates);
         this.location = newCoords;
     }
 
-    private int[] findDirectProportionCoords(int[][] closestCoords, HashMap<String, Integer> coordinatesToPheromones) {
-        int totalWeightage = 0;
-        List<int[]> weightedCoords = new ArrayList<>();
-        double minDistance = Double.MAX_VALUE;
+    private ArrayList<Coordinate> getSurroundingCoords(List<Coordinate> coordinates) {
+        ArrayList<Coordinate> surroundingCoords = new ArrayList<>();
+        int listsize = 8;
+        if (this.location.x == 0 || this.location.x == Settings.WIDTH)
+            listsize -= 3;
+        if (this.location.y == 0 || this.location.y == Settings.HEIGHT)
+            listsize -= 3;
 
-        for (int[] coord : closestCoords) {
-            String key = Arrays.toString(coord);
-            int pheromones = coordinatesToPheromones.get(key);
-            int currentWeightage = pheromones * distanceFromPreviousLocation(coord) * distanceFromOriginalLocation(coord);
-            totalWeightage += currentWeightage;
-            double distanceToFood = Math.sqrt(Math.pow(coord[0] - closestCoords[0][0], 2) + Math.pow(coord[1] - closestCoords[0][1], 2));
-            if (distanceToFood < minDistance) {
-                minDistance = distanceToFood;
+        for (Coordinate coord : coordinates) {
+            if (this.location.getTravelDistance(coord) == 1) {
+                surroundingCoords.add(coord);
+                if (surroundingCoords.size() == listsize)
+                    break;
             }
+        }
+
+        return surroundingCoords;
+    }
+
+    private Coordinate findDirectProportionCoords(Coordinate[] closestCoords, List<Coordinate> coordinates) {
+        int totalWeightage = 0;
+        List<Coordinate> weightedCoords = new ArrayList<>();
+
+        for (Coordinate coord : closestCoords) {
+            int pheromones = coord.pheromones;
+            int distanceFromOriginalLocation = coord.getTravelDistance(this.originalLocation);
+            int distanceFromPreviousLocation = distanceFromPreviousLocation(coord);
+            int currentWeightage = pheromones * distanceFromOriginalLocation * distanceFromPreviousLocation;
+            totalWeightage += currentWeightage;
+
             for (int i = 0; i < currentWeightage; i++) {
                 weightedCoords.add(coord);
             }
         }
 
         int randomIndex = (int) (Math.random() * totalWeightage);
-        int[] randomCoords = weightedCoords.get(randomIndex);
+        Coordinate randomCoord = weightedCoords.get(randomIndex);
 
-        return randomCoords;
+        return randomCoord;
     }
 
-    private int[][] findClosestCoords(HashSet<String> coordinatesToFood, ArrayList<int[]> surroundingCoords, int numClosest) {
-        int[][] closestCoords = new int[numClosest][2];
+    private Coordinate[] findClosestCoords(HashSet<Coordinate> coordinatesWithFood, ArrayList<Coordinate> surroundingCoords, int numClosest) {
+        Coordinate[] closestCoords = new Coordinate[numClosest];
         double[] closestDistances = new double[numClosest];
         Arrays.fill(closestDistances, Double.MAX_VALUE);
 
-        for (String key : coordinatesToFood) {
-            int[] foodCoords = parseCoordinateString(key);
-            for (int[] coord : surroundingCoords) {
-                double distance = Math.sqrt(Math.pow(coord[0] - foodCoords[0], 2) + Math.pow(coord[1] - foodCoords[1], 2));
+        for (Coordinate foodCoord : coordinatesWithFood) {
+            for (Coordinate coord : surroundingCoords) {
+                double distance = coord.getTravelDistance(foodCoord);
                 for (int i = 0; i < numClosest; i++) {
                     if (distance < closestDistances[i]) {
                         for (int j = numClosest - 1; j > i; j--) {
@@ -126,33 +134,19 @@ public class Ant {
         return closestCoords;
     }
 
-    private int distanceFromPreviousLocation(int[] coord) {
-        String previousLocation;
+    private int distanceFromPreviousLocation(Coordinate coord) {
+        Coordinate prevLocation;
+
         try {
-            previousLocation = this.visitedLocations.peek();
+            prevLocation = this.visitedLocations.peek();
         } catch (EmptyStackException e) {
             return 1;
         }
 
-        int[] prevLocation = parseCoordinateString(previousLocation);
-        return Math.abs(coord[0] - prevLocation[0]) + Math.abs(coord[1] - prevLocation[1]);
+        return coord.getTravelDistance(prevLocation);
     }
 
-    private int distanceFromOriginalLocation(int[] coord) {
-        return Math.abs(coord[0] - this.originalLocation[0]) + Math.abs(coord[1] - this.originalLocation[1]);
-    }
-
-    private int[] parseCoordinateString(String string) {
-        return Arrays.stream(string.substring(1, string.length() - 1).split(", ")).mapToInt(Integer::parseInt).toArray();
-    }
-
-    private void updatePheromones(HashMap<String, Integer> coordinatesToPheromones) {
-        String key = this.locString();
-        if (coordinatesToPheromones.containsKey(key))
-            coordinatesToPheromones.put(key, coordinatesToPheromones.get(key) + 1);
-    }
-
-    private String locString() {
-        return Arrays.toString(this.location);
+    private void updatePheromones(List<Coordinate> coordinates) {
+        this.location.pheromones++;
     }
 }
