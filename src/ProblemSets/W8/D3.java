@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.FileWriter;
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import processing.core.PApplet;
@@ -54,7 +53,7 @@ public class D3 extends PApplet {
     }
 
     private void loadPoints() {
-        try (FileReader reader = new FileReader("src/ProblemSets/W8/points.json")) {
+        try {
             String json = new String(Files.readAllBytes(Paths.get("src/ProblemSets/W8/points.json")));
             JSONArray points = new JSONArray(json);
             pointList.clear();
