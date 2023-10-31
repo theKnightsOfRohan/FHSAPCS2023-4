@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.nio.file.*;
 import org.json.JSONArray;
@@ -24,36 +25,34 @@ public class ReadVTTFiles {
     public static void parseAllVTTInDirectory(String pathStr) {
         Path path = Paths.get(pathStr);
         try {
-            for (Path p : Files.newDirectoryStream(path)) {
-                if (p.toString().endsWith(".vtt")) {
-                    ArrayList<String> dirsList = new ArrayList<>(Arrays.asList(p.toString().split("/")));
-                    dirsList.add(dirsList.size() - 1, "JSON");
-                    String[] newDirs = dirsList.toArray(new String[dirsList.size()]);
-                    String JSONPath = String.join("/", newDirs);
-                    String outputJSONPath = JSONPath.substring(0, JSONPath.length() - 4) + ".json";
-                    JSONArray arr = vttToJSON(p.toString(), outputJSONPath);
-
-                    String stats = CreateSummaryFiles.createSummaryStatisticsFile(arr);
-                    String condensed = CreateSummaryFiles.createCondensedTranscriptFile(arr);
-                    dirsList = new ArrayList<>(Arrays.asList(p.toString().split("/")));
-
-                    dirsList.add(dirsList.size() - 1, "Stats");
-                    newDirs = dirsList.toArray(new String[dirsList.size()]);
-                    String statsPath = String.join("/", newDirs);
-                    statsPath = statsPath.substring(0, statsPath.length() - 4) + ".txt";
-                    writeToFile(stats, statsPath);
-
-                    dirsList.remove(dirsList.size() - 2);
-                    dirsList.add(dirsList.size() - 1, "Condensed");
-                    newDirs = dirsList.toArray(new String[dirsList.size()]);
-                    String condensedPath = String.join("/", newDirs);
-                    condensedPath = condensedPath.substring(0, condensedPath.length() - 4) + ".txt";
-                    writeToFile(condensed, condensedPath);
-                }
+            for (Path filePath : Files.newDirectoryStream(path)) {
+                processFile(filePath);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void processFile(Path filePath) throws IOException {
+        if (filePath.toString().endsWith(".vtt")) {
+            String jsonPath = createDirectoryAndReturnPath(filePath, "JSON", ".json");
+            JSONArray jsonArray = vttToJSON(filePath.toString(), jsonPath);
+
+            String stats = CreateSummaryFiles.createSummaryStatisticsFile(jsonArray);
+            String statsPath = createDirectoryAndReturnPath(filePath, "Stats", ".txt");
+            writeToFile(stats, statsPath);
+
+            String condensed = CreateSummaryFiles.createCondensedTranscriptFile(jsonArray);
+            String condensedPath = createDirectoryAndReturnPath(filePath, "Condensed", ".txt");
+            writeToFile(condensed, condensedPath);
+        }
+    }
+
+    private static String createDirectoryAndReturnPath(Path filePath, String directoryName, String fileExtension) {
+        ArrayList<String> dirsList = new ArrayList<>(Arrays.asList(filePath.toString().split("/")));
+        dirsList.add(dirsList.size() - 1, directoryName);
+        String newPath = String.join("/", dirsList.toArray(new String[0]));
+        return newPath.substring(0, newPath.length() - 4) + fileExtension;
     }
 
     /**
