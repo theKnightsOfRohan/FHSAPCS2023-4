@@ -1,9 +1,11 @@
 package ProblemSets.W9;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.nio.file.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,27 +18,42 @@ public class ReadVTTFiles {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        JSONArray sample01 = vttToJSON("src/ProblemSets/W9/TranscriptFiles/sample01.vtt", "src/ProblemSets/W9/Output/JSON/sample01.json");
-        JSONArray DPS1 = vttToJSON("src/ProblemSets/W9/TranscriptFiles/DobervichPlanningSession1.vtt",
-                "src/ProblemSets/W9/Output/JSON/DobervichPlanningSession1.json");
-        JSONArray DPS2 = vttToJSON("src/ProblemSets/W9/TranscriptFiles/DobervichPlanningSession2.vtt",
-                "src/ProblemSets/W9/Output/JSON/DobervichPlanningSession2.json");
+        parseAllVTTInDirectory("src/ProblemSets/W9/TranscriptFiles");
+    }
 
-        String sample01Stats = CreateSummaryFiles.createSummaryStatisticsFile(sample01);
-        String DPS1Stats = CreateSummaryFiles.createSummaryStatisticsFile(DPS1);
-        String DPS2Stats = CreateSummaryFiles.createSummaryStatisticsFile(DPS2);
+    public static void parseAllVTTInDirectory(String pathStr) {
+        Path path = Paths.get(pathStr);
+        try {
+            for (Path p : Files.newDirectoryStream(path)) {
+                if (p.toString().endsWith(".vtt")) {
+                    ArrayList<String> dirsList = new ArrayList<>(Arrays.asList(p.toString().split("/")));
+                    dirsList.add(dirsList.size() - 1, "JSON");
+                    String[] newDirs = dirsList.toArray(new String[dirsList.size()]);
+                    String JSONPath = String.join("/", newDirs);
+                    String outputJSONPath = JSONPath.substring(0, JSONPath.length() - 4) + ".json";
+                    JSONArray arr = vttToJSON(p.toString(), outputJSONPath);
 
-        writeToFile(sample01Stats, "src/ProblemSets/W9/Output/SummaryStatistics/sample01.txt");
-        writeToFile(DPS1Stats, "src/ProblemSets/W9/Output/SummaryStatistics/DobervichPlanningSession1.txt");
-        writeToFile(DPS2Stats, "src/ProblemSets/W9/Output/SummaryStatistics/DobervichPlanningSession2.txt");
+                    String stats = CreateSummaryFiles.createSummaryStatisticsFile(arr);
+                    String condensed = CreateSummaryFiles.createCondensedTranscriptFile(arr);
+                    dirsList = new ArrayList<>(Arrays.asList(p.toString().split("/")));
 
-        String sample01Condensed = CreateSummaryFiles.createCondensedTranscriptFile(sample01);
-        String DPS1Condensed = CreateSummaryFiles.createCondensedTranscriptFile(DPS1);
-        String DPS2Condensed = CreateSummaryFiles.createCondensedTranscriptFile(DPS2);
+                    dirsList.add(dirsList.size() - 1, "Stats");
+                    newDirs = dirsList.toArray(new String[dirsList.size()]);
+                    String statsPath = String.join("/", newDirs);
+                    statsPath = statsPath.substring(0, statsPath.length() - 4) + ".txt";
+                    writeToFile(stats, statsPath);
 
-        writeToFile(sample01Condensed, "src/ProblemSets/W9/Output/CondensedTranscripts/sample01.txt");
-        writeToFile(DPS1Condensed, "src/ProblemSets/W9/Output/CondensedTranscripts/DobervichPlanningSession1.txt");
-        writeToFile(DPS2Condensed, "src/ProblemSets/W9/Output/CondensedTranscripts/DobervichPlanningSession2.txt");
+                    dirsList.remove(dirsList.size() - 2);
+                    dirsList.add(dirsList.size() - 1, "Condensed");
+                    newDirs = dirsList.toArray(new String[dirsList.size()]);
+                    String condensedPath = String.join("/", newDirs);
+                    condensedPath = condensedPath.substring(0, condensedPath.length() - 4) + ".txt";
+                    writeToFile(condensed, condensedPath);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
