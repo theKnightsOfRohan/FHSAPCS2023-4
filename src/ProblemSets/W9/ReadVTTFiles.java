@@ -8,6 +8,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ReadVTTFiles {
+    /**
+     * This method reads .vtt files and converts them to JSON format. It then
+     * creates summary statistics and condensed transcript files for each input
+     * file.
+     * 
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         JSONArray sample01 = vttToJSON("src/ProblemSets/W9/TranscriptFiles/sample01.vtt", "src/ProblemSets/W9/Output/JSON/sample01.json");
         JSONArray DPS1 = vttToJSON("src/ProblemSets/W9/TranscriptFiles/DobervichPlanningSession1.vtt",
@@ -32,6 +39,14 @@ public class ReadVTTFiles {
         writeToFile(DPS2Condensed, "src/ProblemSets/W9/Output/CondensedTranscripts/DobervichPlanningSession2.txt");
     }
 
+    /**
+     * Converts a VTT file to a JSON array. Reads the file from the input path,
+     * parses it to a JSON array, and writes the result to the output path.
+     * 
+     * @param inputPath  the path of the VTT file to be converted
+     * @param outputPath the path of the output file to be written
+     * @return the parsed JSON array
+     */
     private static JSONArray vttToJSON(String inputPath, String outputPath) {
         ArrayList<String> fileLines = readFile(inputPath);
         JSONArray parsedFile = parseToJSON(fileLines);
@@ -48,6 +63,21 @@ public class ReadVTTFiles {
         }
     }
 
+    /**
+     * Parses an ArrayList of file lines into a JSONArray of JSONObjects. Each
+     * JSONObject represents a line of dialogue in a VTT file. The VTT file must
+     * follow the format of having the speaker's name followed by a colon and then
+     * their dialogue. The ArrayList must contain the file lines in the correct
+     * order. The JSONArray will contain JSONObjects with the following keys: -
+     * "speaker": the name of the speaker - "words": the dialogue spoken by the
+     * speaker - "start": the start time of the dialogue in the format
+     * "hh:mm:ss.mmm" - "end": the end time of the dialogue in the format
+     * "hh:mm:ss.mmm"
+     * 
+     * @param fileLines the ArrayList of file lines to parse
+     * @return the parsed JSONArray of JSONObjects, or null if an exception occurred
+     *         during parsing
+     */
     private static JSONArray parseToJSON(ArrayList<String> fileLines) {
         try {
             JSONArray parsedFile = new JSONArray();
@@ -59,7 +89,6 @@ public class ReadVTTFiles {
                 if (nameAndWords.length == 1) {
                     Object obj = parsedFile.getJSONObject(parsedFile.length() - 1).get("speaker");
                     String speaker = obj.toString();
-                    // System.out.println(speaker);
                     line.put("speaker", speaker);
                     line.put("words", nameAndWords[0]);
                 } else {
@@ -71,8 +100,6 @@ public class ReadVTTFiles {
                 parsedFile.put(line);
             }
 
-            // System.out.println(parsedFile);
-
             return parsedFile;
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,6 +108,13 @@ public class ReadVTTFiles {
         return null;
     }
 
+    /**
+     * Reads a file from the given path and returns its contents as an ArrayList of
+     * Strings for each line.
+     *
+     * @param path the path of the file to be read
+     * @return an ArrayList of Strings containing the contents of the file
+     */
     private static ArrayList<String> readFile(String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             ArrayList<String> fileLines = new ArrayList<>();
@@ -96,5 +130,4 @@ public class ReadVTTFiles {
 
         return null;
     }
-
 }
