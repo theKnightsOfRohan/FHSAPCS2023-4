@@ -22,6 +22,11 @@ public class ReadVTTFiles {
         parseAllVTTInDirectory("src/ProblemSets/W9/TranscriptFiles");
     }
 
+    /**
+     * Parses all VTT files in the given directory path.
+     * 
+     * @param pathStr the path of the directory containing VTT files
+     */
     public static void parseAllVTTInDirectory(String pathStr) {
         Path path = Paths.get(pathStr);
         try {
@@ -33,6 +38,18 @@ public class ReadVTTFiles {
         }
     }
 
+    /**
+     * Processes a file given its file path. If the file is a .vtt file, it creates
+     * a JSON file, a summary statistics file, and a condensed transcript file. The
+     * JSON file is created by converting the .vtt file to a JSON array using the
+     * vttToJSON method. The summary statistics file is created by calling the
+     * createSummaryStatisticsFile method from the CreateSummaryFiles class. The
+     * condensed transcript file is created by calling the
+     * createCondensedTranscriptFile method from the CreateSummaryFiles class.
+     * 
+     * @param filePath the path of the file to be processed
+     * @throws IOException if there is an error in creating or writing to the files
+     */
     private static void processFile(Path filePath) throws IOException {
         if (filePath.toString().endsWith(".vtt")) {
             String jsonPath = createDirectoryAndReturnPath(filePath, "JSON", ".json");
@@ -48,6 +65,15 @@ public class ReadVTTFiles {
         }
     }
 
+    /**
+     * Creates a new directory with the given name in the path of the provided file,
+     * and returns the path of the new directory with the given file extension.
+     * 
+     * @param filePath      the path of the file to create the directory in
+     * @param directoryName the name of the directory to create
+     * @param fileExtension the file extension to add to the new directory path
+     * @return the path of the new directory with the given file extension
+     */
     private static String createDirectoryAndReturnPath(Path filePath, String directoryName, String fileExtension) {
         ArrayList<String> dirsList = new ArrayList<>(Arrays.asList(filePath.toString().split("/")));
         dirsList.add(dirsList.size() - 1, directoryName);
