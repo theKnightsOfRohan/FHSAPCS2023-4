@@ -27,11 +27,11 @@ public class ReadVTTFiles {
      * 
      * @param pathStr the path of the directory containing VTT files
      */
-    public static void parseAllVTTInDirectory(String pathStr) {
-        Path path = Paths.get(pathStr);
+    public static void parseAllVTTInDirectory(String directoryStr) {
+        Path directory = Paths.get(directoryStr);
         try {
-            for (Path filePath : Files.newDirectoryStream(path)) {
-                processFile(filePath);
+            for (Path pathToFile : Files.newDirectoryStream(directory)) {
+                processFile(pathToFile);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,8 +129,7 @@ public class ReadVTTFiles {
                 String[] times = fileLines.get(i + 1).split(" --> ");
                 String[] nameAndWords = fileLines.get(i + 2).split(": ");
                 if (nameAndWords.length == 1) {
-                    Object obj = parsedFile.getJSONObject(parsedFile.length() - 1).get("speaker");
-                    String speaker = obj.toString();
+                    String speaker = parsedFile.getJSONObject(parsedFile.length() - 1).getString("speaker");
                     line.put("speaker", speaker);
                     line.put("words", nameAndWords[0]);
                 } else {
