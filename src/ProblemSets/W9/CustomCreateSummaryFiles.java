@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 public class CustomCreateSummaryFiles {
     /**
-     * This method takes in a JSONArray of meeting transcript lines and returns a
-     * summary statistics file as a string. The summary statistics include the
-     * number of people in the meeting, the total length of the meeting, the total
-     * speaking time, the number of times the speaker changed, and the total
-     * speaking time and number of times spoken for each speaker.
+     * This method takes in a ArrayList of Messages and returns a summary statistics
+     * file as a string. The summary statistics include the number of people in the
+     * meeting, the total length of the meeting, the total speaking time, the number
+     * of times the speaker changed, and the total speaking time and number of times
+     * spoken for each speaker.
      * 
-     * @param arr the JSONArray of meeting transcript lines
+     * @param arr the ArrayList of messages in the meeting
      * @return a summary statistics file as a string
      */
     public static String createSummaryStatisticsFile(ArrayList<Message> messages) {
@@ -80,11 +80,10 @@ public class CustomCreateSummaryFiles {
     }
 
     /**
-     * Creates a condensed transcript file from a JSONArray of speaker and words.
-     * The method combines consecutive lines spoken by the same speaker into a
-     * single line.
+     * Creates a condensed transcript file from a ArrayList of messages. The method
+     * combines consecutive lines spoken by the same speaker into a single line.
      * 
-     * @param arr the JSONArray of speaker and words
+     * @param arr the ArrayList of Messages
      * @return the condensed transcript file as a string
      */
     public static String createCondensedTranscriptFile(ArrayList<Message> messages) {

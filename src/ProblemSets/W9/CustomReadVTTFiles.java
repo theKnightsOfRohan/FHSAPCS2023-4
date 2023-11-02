@@ -8,13 +8,6 @@ import java.io.BufferedReader;
 import java.nio.file.*;
 
 public class CustomReadVTTFiles {
-    /**
-     * This method reads .vtt files and converts them to JSON format. It then
-     * creates summary statistics and condensed transcript files for each input
-     * file.
-     * 
-     * @param args command line arguments
-     */
     public static void main(String[] args) {
         parseAllVTTInDirectory("src/ProblemSets/W9/TranscriptFiles");
     }
@@ -36,6 +29,14 @@ public class CustomReadVTTFiles {
         }
     }
 
+    /**
+     * This method processes a .vtt file by reading its contents, creating a list of
+     * messages from the file, creating summary statistics and a condensed
+     * transcript from the messages, and writing the summary statistics and
+     * condensed transcript to separate files.
+     * 
+     * @param pathToFile the path to the file to be processed
+     */
     private static void processFile(Path pathToFile) {
         ArrayList<String> fileLines = readFile(pathToFile.toString());
 

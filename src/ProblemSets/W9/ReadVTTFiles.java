@@ -11,13 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ReadVTTFiles {
-    /**
-     * This method reads .vtt files and converts them to JSON format. It then
-     * creates summary statistics and condensed transcript files for each input
-     * file.
-     * 
-     * @param args command line arguments
-     */
     public static void main(String[] args) {
         parseAllVTTInDirectory("src/ProblemSets/W9/TranscriptFiles");
     }
