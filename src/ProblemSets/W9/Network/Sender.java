@@ -2,7 +2,9 @@ package ProblemSets.W9.Network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -15,6 +17,8 @@ public class Sender {
             while (true) {
                 Thread.sleep(1000);
             }
+        } catch (EOFException e) {
+            System.out.println("Server disconnected");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,6 +43,8 @@ public class Sender {
                     }
                     messages.add(message);
                 }
+            } catch (EOFException e) {
+                System.out.println("Server disconnected");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -70,6 +76,8 @@ public class Sender {
                         out.writeUTF("PING");
                     }
                 }
+            } catch (SocketException e) {
+                System.out.println("Server disconnected");
             } catch (Exception e) {
                 e.printStackTrace();
             }
