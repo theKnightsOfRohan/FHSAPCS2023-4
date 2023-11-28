@@ -1,7 +1,7 @@
 package ProblemSets.W3.Extras;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class BasketballShotStreak {
     public static void main(String[] args) {
@@ -14,9 +14,9 @@ public class BasketballShotStreak {
      * one or more misses. In this problem you’ll investigate the probability of
      * seeing a long streak of hits assuming there is no such thing. If it turns out
      * that long streaks of hits aren’t unlikely to happen just by chance, you might
-     * conclude that belief in the “hot hand” is based on misperception.
-     * Assume a basketball team has 10 players, each of which takes 15 shots during
-     * the course of the game. Each shot has a probability of 50% of going in.
+     * conclude that belief in the “hot hand” is based on misperception. Assume a
+     * basketball team has 10 players, each of which takes 15 shots during the
+     * course of the game. Each shot has a probability of 50% of going in.
      */
 
     /*
@@ -25,8 +25,7 @@ public class BasketballShotStreak {
      */
 
     @RunnableMethod
-    public static double calcProbOfStreakInOneGame(int trials, int players, int shotsPerPlayer, int streakLength,
-            double probPerPlayer) {
+    public static double calcProbOfStreakInOneGame(int trials, int players, int shotsPerPlayer, int streakLength, double probPerPlayer) {
         int numOfStreaks = 0;
 
         for (int i = 1; i <= trials; i++) {
@@ -38,8 +37,7 @@ public class BasketballShotStreak {
     }
 
     @HelperMethod
-    private static boolean streakInOneGame(int shotsPerPlayer, int totalPlayers, int streakLength,
-            double probPerPlayer) {
+    private static boolean streakInOneGame(int shotsPerPlayer, int totalPlayers, int streakLength, double probPerPlayer) {
         for (int i = 0; i < totalPlayers; i++) {
             if (streak(shotsPerPlayer, streakLength, probPerPlayer))
                 return true;

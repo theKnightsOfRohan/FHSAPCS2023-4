@@ -1,10 +1,12 @@
 package ProblemSets.W4;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -91,22 +93,22 @@ public class D2 {
     @HelperMethod
     private static String computeValue(String operator, String operand1, String operand2) {
         switch (operator) {
-        case "+":
-            return String.valueOf(Double.parseDouble(operand1) + Double.parseDouble(operand2));
-        case "-":
-            return String.valueOf(Double.parseDouble(operand1) - Double.parseDouble(operand2));
-        case "*":
-            return String.valueOf(Double.parseDouble(operand1) * Double.parseDouble(operand2));
-        case "/":
-            return String.valueOf(Double.parseDouble(operand1) / Double.parseDouble(operand2));
-        case "^":
-            return String.valueOf(Math.pow(Double.parseDouble(operand1), Double.parseDouble(operand2)));
-        case "√":
-            return String.valueOf(Math.pow(Double.parseDouble(operand2), 1 / Double.parseDouble(operand1)));
-        case "log":
-            return String.valueOf(Math.log(Double.parseDouble(operand2)) / Math.log(Double.parseDouble(operand1)));
-        case "%":
-            return String.valueOf(Double.parseDouble(operand1) % Double.parseDouble(operand2));
+            case "+":
+                return String.valueOf(Double.parseDouble(operand1) + Double.parseDouble(operand2));
+            case "-":
+                return String.valueOf(Double.parseDouble(operand1) - Double.parseDouble(operand2));
+            case "*":
+                return String.valueOf(Double.parseDouble(operand1) * Double.parseDouble(operand2));
+            case "/":
+                return String.valueOf(Double.parseDouble(operand1) / Double.parseDouble(operand2));
+            case "^":
+                return String.valueOf(Math.pow(Double.parseDouble(operand1), Double.parseDouble(operand2)));
+            case "√":
+                return String.valueOf(Math.pow(Double.parseDouble(operand2), 1 / Double.parseDouble(operand1)));
+            case "log":
+                return String.valueOf(Math.log(Double.parseDouble(operand2)) / Math.log(Double.parseDouble(operand1)));
+            case "%":
+                return String.valueOf(Double.parseDouble(operand1) % Double.parseDouble(operand2));
         }
         throw new IllegalArgumentException("Invalid operator");
     }

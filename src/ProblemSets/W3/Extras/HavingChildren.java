@@ -1,7 +1,7 @@
 package ProblemSets.W3.Extras;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class HavingChildren {
     public static void main(String[] args) {

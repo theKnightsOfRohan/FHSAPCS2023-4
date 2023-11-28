@@ -1,7 +1,7 @@
 package ProblemSets.W3.Extras;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class NthDimensionalDistance {
     public static void main(String[] args) {
@@ -12,10 +12,9 @@ public class NthDimensionalDistance {
      * 7. Higher dimensional geometry. Higher dimensional spaces are very important
      * in machine learning and data science. However, the geometry of higher
      * dimensions often doesn’t behave the way you expect based on your intuition
-     * from 2nd and 3rd dimensional spaces.
-     * Generate two random points from a d-dimensional space with each coordinate
-     * between 0 and 1. Calculate the average distance between them over many
-     * trials.
+     * from 2nd and 3rd dimensional spaces. Generate two random points from a
+     * d-dimensional space with each coordinate between 0 and 1. Calculate the
+     * average distance between them over many trials.
      * 
      * Output a table showing the average distance between two random points with
      * the dimension going from 2 to 30.

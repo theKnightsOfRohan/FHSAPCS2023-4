@@ -1,6 +1,6 @@
 package ProblemSets.W3.Extras;
 
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class StatsConfidenceInterval {
     public static void main(String[] args) {
@@ -17,36 +17,32 @@ public class StatsConfidenceInterval {
      * interval”. If you have few trials your interval will be wide, but as you
      * increase the number of trials, your interval will become narrower. When your
      * interval is more narrow than your desired precision, you stop performing
-     * experiments.
-     * Idea of a confidence interval: Let’s say I run an experiment 6 times and I
-     * get outcomes of 55, 56, 55, 56, 57, and 57. The mean value is 56, and because
-     * there’s very little variation from the mean, I should be able to be confident
-     * that the true expected outcome is between 55 and 57.
-     * But what if I run an experiment 6 times and the outcomes are 2, 109, 45, 23,
-     * 89, and 56. The mean is 54, but there’s so much variability that I’m not very
-     * confident the real mean is between 53 and 55; it could easily be something
-     * else.
-     * If you construct a 95% confidence interval, you’re sure that 95 out of 100
-     * times you do this your interval will contain the true mean. (This is slightly
-     * different than saying there’s a 95% chance that the interval you DID
-     * construct contains the true mean).
-     * Here’s the math: If you run T trials, you can calculate the mean and the
-     * variance this way:
+     * experiments. Idea of a confidence interval: Let’s say I run an experiment 6
+     * times and I get outcomes of 55, 56, 55, 56, 57, and 57. The mean value is 56,
+     * and because there’s very little variation from the mean, I should be able to
+     * be confident that the true expected outcome is between 55 and 57. But what if
+     * I run an experiment 6 times and the outcomes are 2, 109, 45, 23, 89, and 56.
+     * The mean is 54, but there’s so much variability that I’m not very confident
+     * the real mean is between 53 and 55; it could easily be something else. If you
+     * construct a 95% confidence interval, you’re sure that 95 out of 100 times you
+     * do this your interval will contain the true mean. (This is slightly different
+     * than saying there’s a 95% chance that the interval you DID construct contains
+     * the true mean). Here’s the math: If you run T trials, you can calculate the
+     * mean and the variance this way:
      * 
      * represents the mean and 2represents the variance. (The variance is a measure
-     * of how much the data is “spread out” around the mean.
-     * For a 95% confidence interval, the low and high values are given by:
-     * As you can see, if T gets very large then the fractional term will get very
-     * small and the overall interval will narrow. Note that you will need to run a
-     * minimum number of trials before you start calculating confidence intervals.
-     * For your simulations in this problem set, let’s call that number 100.
-     * You can see this white paper from a financial investment group which explains
-     * the same idea above.
-     * Programming task: For one (or more) of your problems, have the user specify
-     * acceptable error (a double, say “0.01”). Then, as you perform more trials,
-     * calculate the mean, standard deviation and bounds for a 95% confidence
-     * interval. When the width of the confidence interval is smaller than your
-     * acceptable error, you can stop running experiments!
+     * of how much the data is “spread out” around the mean. For a 95% confidence
+     * interval, the low and high values are given by: As you can see, if T gets
+     * very large then the fractional term will get very small and the overall
+     * interval will narrow. Note that you will need to run a minimum number of
+     * trials before you start calculating confidence intervals. For your
+     * simulations in this problem set, let’s call that number 100. You can see this
+     * white paper from a financial investment group which explains the same idea
+     * above. Programming task: For one (or more) of your problems, have the user
+     * specify acceptable error (a double, say “0.01”). Then, as you perform more
+     * trials, calculate the mean, standard deviation and bounds for a 95%
+     * confidence interval. When the width of the confidence interval is smaller
+     * than your acceptable error, you can stop running experiments!
      */
 
     @RunnableMethod

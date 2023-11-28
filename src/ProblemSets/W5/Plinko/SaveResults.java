@@ -1,6 +1,10 @@
 package ProblemSets.W5.Plinko;
 
 import org.json.JSONObject;
+
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
+
 import org.json.JSONArray;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -8,8 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.io.FileWriter;
 import java.io.IOException;
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
 
 public class SaveResults {
     /**

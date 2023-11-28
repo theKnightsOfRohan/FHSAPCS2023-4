@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class D2 {
     public static void main(String[] args) {
@@ -16,11 +16,9 @@ public class D2 {
     /*
      * Given a pair of numbers, an addition cycle is the process of adding the two
      * numbers together, and then adding the ones digit of the result to the end of
-     * the list,
-     * and then repeating the process with the last two digits, and so on, until the
-     * first two digits are reached again.
-     * This is treated as one cycle, whose length is the number of times the process
-     * is repeated.
+     * the list, and then repeating the process with the last two digits, and so on,
+     * until the first two digits are reached again. This is treated as one cycle,
+     * whose length is the number of times the process is repeated.
      */
 
     public static int longestAdditionCycle() {
@@ -94,11 +92,9 @@ public class D2 {
 
     /*
      * Given a chessboard, there is a configuration of 8 queens in which each queen
-     * does not threaten any other queen.
-     * Using a brute force method, find that configuration.
-     * Return the configuration as an array of 8 integers,
-     * where each value represents the column (0-7)
-     * and each index represents the row (0-7).
+     * does not threaten any other queen. Using a brute force method, find that
+     * configuration. Return the configuration as an array of 8 integers, where each
+     * value represents the column (0-7) and each index represents the row (0-7).
      */
 
     @RunnableMethod(description = "Find all configurations of 8 queens in which each queen does not threaten any other queen.")

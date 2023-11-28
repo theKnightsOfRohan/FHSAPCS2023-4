@@ -1,8 +1,9 @@
 package ProblemSets.W3.Extras;
 
 import java.util.Arrays;
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class ProbabilityOfTriangle {
     public static void main(String[] args) {
@@ -14,9 +15,9 @@ public class ProbabilityOfTriangle {
     /*
      * Suppose I have a stick of length 1. I select two places at random to break
      * it, giving me three pieces. What is the probability those pieces can be put
-     * together to make a triangle?
-     * Approximate this probability using 10,000 random experiments in which you
-     * break a stick and then check if the pieces can make a triangle...
+     * together to make a triangle? Approximate this probability using 10,000 random
+     * experiments in which you break a stick and then check if the pieces can make
+     * a triangle...
      */
 
     @RunnableMethod

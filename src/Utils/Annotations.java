@@ -1,4 +1,4 @@
-package GeneralHelpers;
+package Utils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

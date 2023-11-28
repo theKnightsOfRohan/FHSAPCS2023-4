@@ -1,7 +1,7 @@
 package ProblemSets.W3.Extras;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class PepysProblem {
     public static void main(String[] args) {
@@ -10,14 +10,13 @@ public class PepysProblem {
     }
 
     /*
-     * In 1693, Samuel Pepys asked Isaac Newton (co-inventor of
-     * the Calculus) which was more likely: getting at least one 1 when rolling a
-     * fair die 6 times or getting at least two 1's when rolling a fair die 12
-     * times.
-     * You will write a program to answer this general kind of question. Your method
-     * should use 10000 trials to approximate the probability of getting at least n
-     * 1’s when rolling a die m times (and, of course, n can’t be larger than m ).
-     * Your method will look like this:
+     * In 1693, Samuel Pepys asked Isaac Newton (co-inventor of the Calculus) which
+     * was more likely: getting at least one 1 when rolling a fair die 6 times or
+     * getting at least two 1's when rolling a fair die 12 times. You will write a
+     * program to answer this general kind of question. Your method should use 10000
+     * trials to approximate the probability of getting at least n 1’s when rolling
+     * a die m times (and, of course, n can’t be larger than m ). Your method will
+     * look like this:
      */
 
     @RunnableMethod

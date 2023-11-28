@@ -1,7 +1,7 @@
 package ProblemSets.W3.Extras;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class RoboticsCompetition {
     public static void main(String[] args) {
@@ -15,10 +15,9 @@ public class RoboticsCompetition {
      * moving to a ball location, picking it up, moving to another ball location,
      * picking it up, driving to the nearest scoring position and shooting. We add
      * up the time for all those steps and we can figure out how long a cycle takes,
-     * and therefore how many full cycles will fit in 2:15.
-     * Write a monte-carlos simulation to determine the average driving distance for
-     * a complete scoring cycle assuming 6 balls a random locations on a 54’ x 27’
-     * field.
+     * and therefore how many full cycles will fit in 2:15. Write a monte-carlos
+     * simulation to determine the average driving distance for a complete scoring
+     * cycle assuming 6 balls a random locations on a 54’ x 27’ field.
      */
 
     @RunnableMethod

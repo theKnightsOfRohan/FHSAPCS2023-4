@@ -3,7 +3,7 @@ package ProblemSets.W5.Plinko;
 import processing.core.PApplet;
 import org.json.JSONObject;
 
-import GeneralHelpers.Annotations.HelperMethod;
+import Utils.Annotations.HelperMethod;
 
 import org.json.JSONArray;
 import org.json.JSONException;

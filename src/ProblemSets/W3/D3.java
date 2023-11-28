@@ -1,19 +1,17 @@
 package ProblemSets.W3;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class D3 {
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
-            System.out.println("Probability of a B Student getting an A: "
-                    + probabilityOfASemesterFromBStudentWithRetakes(10000, .9999, 0.85, 5, 1));
+            System.out.println("Probability of a B Student getting an A: " + probabilityOfASemesterFromBStudentWithRetakes(10000, .9999, 0.85, 5, 1));
         }
     }
 
     @RunnableMethod
-    public static double probabilityOfASemesterFromBStudentWithRetakes(int trials, double probPerQuiz,
-            double neededGrade, int numQuizzes,
+    public static double probabilityOfASemesterFromBStudentWithRetakes(int trials, double probPerQuiz, double neededGrade, int numQuizzes,
             int retakes) {
         int numOfA = 0;
 
@@ -26,8 +24,7 @@ public class D3 {
     }
 
     @HelperMethod
-    private static boolean aSemesterFromBStudentWithRetakes(int numQuizzes, double probPerQuiz, double neededGrade,
-            int retakes) {
+    private static boolean aSemesterFromBStudentWithRetakes(int numQuizzes, double probPerQuiz, double neededGrade, int retakes) {
         double numOfA = 0;
         for (int i = 0; i < numQuizzes; i++) {
             if (Math.random() < probPerQuiz)
@@ -47,8 +44,7 @@ public class D3 {
     }
 
     @RunnableMethod
-    public static double probabilityOfNoAGradeSemesterWithRetakes(int trials, double probPerQuiz, int numQuizzes,
-            int retakes) {
+    public static double probabilityOfNoAGradeSemesterWithRetakes(int trials, double probPerQuiz, int numQuizzes, int retakes) {
         int numOfNoA = 0;
 
         for (int i = 1; i <= trials; i++) {
@@ -212,7 +208,6 @@ class Results {
     }
 
     public String toString() {
-        return "Win Amount: " + winAmt + "\tProbability: "
-                + probability + "\tAverage Bets Made: " + avgBetsMade;
+        return "Win Amount: " + winAmt + "\tProbability: " + probability + "\tAverage Bets Made: " + avgBetsMade;
     }
 }

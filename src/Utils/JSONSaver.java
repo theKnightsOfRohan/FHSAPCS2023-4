@@ -1,6 +1,10 @@
-package GeneralHelpers;
+package Utils;
 
 import org.json.JSONObject;
+
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.nio.file.Files;
@@ -11,8 +15,6 @@ import java.util.Collection;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
 
 public class JSONSaver {
     JSONObject obj;

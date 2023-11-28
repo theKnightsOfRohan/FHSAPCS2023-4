@@ -1,7 +1,7 @@
 package ProblemSets.W5.Plinko;
 
-import GeneralHelpers.Annotations.HelperMethod;
-import GeneralHelpers.Annotations.RunnableMethod;
+import Utils.Annotations.HelperMethod;
+import Utils.Annotations.RunnableMethod;
 
 public class PlinkoSimulation {
     // Basic constants
