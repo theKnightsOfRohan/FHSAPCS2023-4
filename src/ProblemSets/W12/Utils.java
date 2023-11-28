@@ -3,6 +3,7 @@ package ProblemSets.W12;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
@@ -46,5 +47,34 @@ public class Utils {
 			magnitudes.add(Math.sqrt(Math.pow(x.get(i), 2) + Math.pow(y.get(i), 2) + Math.pow(z.get(i), 2)));
 		}
 		return magnitudes;
+	}
+
+	public static void writeToCSVFile(String filePath, List<Double> data) {
+		try (java.io.PrintWriter writer = new java.io.PrintWriter(filePath)) {
+			for (int i = 0; i < data.size(); i++) {
+				writer.println(i + "," + data.get(i));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static List<Double> applyBasicMedianFilter(List<Double> magnitudes) {
+		Arrays.sort(magnitudes.toArray());
+		return magnitudes.subList(magnitudes.size() / 2, magnitudes.size());
+	}
+
+	public static List<Double> applyMovingAverage(List<Double> magnitudes, int spread) {
+		List<Double> filteredMagnitudes = new ArrayList<Double>();
+		for (int i = 0; i < magnitudes.size(); i++) {
+			double sum = 0;
+			for (int j = i - spread; j < i + spread; j++) {
+				if (j >= 0 && j < magnitudes.size()) {
+					sum += magnitudes.get(j);
+				}
+			}
+			filteredMagnitudes.add(sum / (spread * 2 + 1));
+		}
+		return filteredMagnitudes;
 	}
 }
