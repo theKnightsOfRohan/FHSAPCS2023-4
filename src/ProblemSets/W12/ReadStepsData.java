@@ -1,5 +1,6 @@
 package ProblemSets.W12;
 
+import ProblemSets.W12.CSVDataUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Arrays;
@@ -10,26 +11,20 @@ import Plot.ScatterPlot;
 
 public class ReadStepsData {
 	public static void main(String[] args) {
-		String filePath = "src/ProblemSets/W12/Steps_Data/1-100-step-regular.csv";
-		HashMap<String, List<String>> dataAsStrings = Utils.readCSVFileAsMap(filePath);
+		processData("src/ProblemSets/W12/Steps_Data/1-200-step-regular.csv", 0);
+	}
 
-		HashMap<String, List<Double>> data = Utils.parseCSVString(dataAsStrings);
+	public static void processData(String filePath, double threshold) {
+		HashMap<String, List<String>> dataAsStrings = CSVDataUtils.readCSVFileAsMap(filePath);
 
-		List<Double> magnitudes = Utils.getMagnitudes(data.get("BMI160_accelerometer.x"), data.get("BMI160_accelerometer.y"),
+		HashMap<String, List<Double>> data = CSVDataUtils.parseCSVString(dataAsStrings);
+
+		List<Double> magnitudes = CSVDataUtils.getMagnitudes(data.get("BMI160_accelerometer.x"), data.get("BMI160_accelerometer.y"),
 				data.get("BMI160_accelerometer.z"));
 
-		System.out.println("Data size: " + magnitudes.size());
-		Utils.writeToCSVFile("src/ProblemSets/W12/Output/FullMagnitudes.csv", magnitudes);
+		magnitudes = CSVDataUtils.applyBasicMedianFilter(magnitudes);
 
-		magnitudes = Utils.applyBasicMedianFilter(magnitudes);
-		System.out.println("Data size after median filter: " + magnitudes.size());
-		Utils.writeToCSVFile("src/ProblemSets/W12/Output/FilteredMagnitudes.csv", magnitudes);
-
-		magnitudes = Utils.applyMovingAverage(magnitudes, 5);
-		Utils.writeToCSVFile("src/ProblemSets/W12/Output/MovingAverage.csv", magnitudes);
-
-		double threshold = 0;
-		System.out.println(calculateSteps(magnitudes, threshold) + " steps calculated.");
+		magnitudes = CSVDataUtils.applyMovingAverage(magnitudes, 5);
 
 		plotData(magnitudes, threshold);
 	}
@@ -37,7 +32,7 @@ public class ReadStepsData {
 	private static int calculateSteps(List<Double> magnitudes, double threshold) {
 		int stepCount = 0;
 		for (int i = 1; i < magnitudes.size() - 1; i++) {
-			if (isPeakOrValley(magnitudes, i, threshold)) {
+			if (isPeak(magnitudes, i, threshold)) {
 				stepCount++;
 			}
 		}
@@ -53,7 +48,7 @@ public class ReadStepsData {
 			plt.plot(0, i, data.get(i)).strokeColor("red").strokeWeight(2).style("-");
 			obs.add(i, data.get(i));
 
-			if (isPeakOrValley(data, i, threshold)) {
+			if (isPeak(data, i, threshold)) {
 				plt.plot(1, i, data.get(i)).strokeColor("green").strokeWeight(2).style(".");
 			}
 		}
@@ -68,16 +63,23 @@ public class ReadStepsData {
 		}
 
 		PlotWindow window = PlotWindow.getWindowFor(plt, 1200, 800);
-		window.show();
+		// window.show();
 	}
 
-	public static boolean isPeakOrValley(List<Double> data, int index, double threshold) {
+	private static boolean isPeak(List<Double> magnitudes, int index, double threshold) {
 		try {
-			boolean isPeak = data.get(index) - data.get(index - 1) > threshold && data.get(index) - data.get(index + 1) > threshold;
-			boolean isValley = data.get(index - 1) - data.get(index) > threshold && data.get(index + 1) - data.get(index) > threshold;
-			return isPeak || isValley;
+			return magnitudes.get(index) - magnitudes.get(index - 1) > threshold && magnitudes.get(index) - magnitudes.get(index + 1) > threshold;
 		} catch (IndexOutOfBoundsException e) {
 			return false;
 		}
 	}
+
+	private static boolean isValley(List<Double> magnitudes, int index, double threshold) {
+		try {
+			return magnitudes.get(index - 1) - magnitudes.get(index) > threshold && magnitudes.get(index + 1) - magnitudes.get(index) > threshold;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
+	}
+
 }

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class Utils {
+public class CSVDataUtils {
 	public static HashMap<String, List<Double>> parseCSVString(HashMap<String, List<String>> dataAsStrings) {
 		HashMap<String, List<Double>> data = new HashMap<String, List<Double>>();
 		for (String key : dataAsStrings.keySet()) {
