@@ -77,4 +77,12 @@ public class CSVDataUtils {
 		}
 		return filteredMagnitudes;
 	}
+
+	public static String getOutputPath(String filePath) {
+		List<String> pathParts = Arrays.asList(filePath.split("/"));
+		pathParts.set(pathParts.size() - 2, "Output");
+		String fileName = pathParts.get(pathParts.size() - 1);
+		pathParts.set(pathParts.size() - 1, fileName.substring(0, fileName.length() - 4) + "_output.txt");
+		return String.join("/", pathParts);
+	}
 }

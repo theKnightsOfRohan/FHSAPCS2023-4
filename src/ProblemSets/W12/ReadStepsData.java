@@ -1,6 +1,6 @@
 package ProblemSets.W12;
 
-import ProblemSets.W12.CSVDataUtils;
+import Utils.FileIO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Arrays;
@@ -12,9 +12,14 @@ import Plot.ScatterPlot;
 public class ReadStepsData {
 	public static void main(String[] args) {
 		processData("src/ProblemSets/W12/Steps_Data/1-200-step-regular.csv", 0);
+		processData("src/ProblemSets/W12/Steps_Data/2-200-step-variable.csv", 0);
+		processData("src/ProblemSets/W12/Steps_Data/3-200-step-jacket.csv", 0);
 	}
 
 	public static void processData(String filePath, double threshold) {
+		String ouputPath = CSVDataUtils.getOutputPath(filePath);
+		String outputStr = "Threshold: " + threshold + "\n";
+
 		HashMap<String, List<String>> dataAsStrings = CSVDataUtils.readCSVFileAsMap(filePath);
 
 		HashMap<String, List<Double>> data = CSVDataUtils.parseCSVString(dataAsStrings);
@@ -22,9 +27,15 @@ public class ReadStepsData {
 		List<Double> magnitudes = CSVDataUtils.getMagnitudes(data.get("BMI160_accelerometer.x"), data.get("BMI160_accelerometer.y"),
 				data.get("BMI160_accelerometer.z"));
 
-		magnitudes = CSVDataUtils.applyBasicMedianFilter(magnitudes);
+		outputStr += "Length of data before filtering: " + magnitudes.size() + "\n";
+
+		// magnitudes = CSVDataUtils.applyBasicMedianFilter(magnitudes);
+		// outputStr += "Length of data after median filter: " + magnitudes.size() +
+		// "\n";
 
 		magnitudes = CSVDataUtils.applyMovingAverage(magnitudes, 5);
+		outputStr += "Number of steps after moving average: " + calculateSteps(magnitudes, threshold) + "\n";
+		FileIO.writeToFile(ouputPath, outputStr);
 
 		plotData(magnitudes, threshold);
 	}
@@ -32,7 +43,7 @@ public class ReadStepsData {
 	private static int calculateSteps(List<Double> magnitudes, double threshold) {
 		int stepCount = 0;
 		for (int i = 1; i < magnitudes.size() - 1; i++) {
-			if (isPeak(magnitudes, i, threshold)) {
+			if (isPeak(magnitudes, i, threshold) || isValley(magnitudes, i, threshold)) {
 				stepCount++;
 			}
 		}
@@ -48,7 +59,7 @@ public class ReadStepsData {
 			plt.plot(0, i, data.get(i)).strokeColor("red").strokeWeight(2).style("-");
 			obs.add(i, data.get(i));
 
-			if (isPeak(data, i, threshold)) {
+			if (isPeak(data, i, threshold) || isValley(data, i, threshold)) {
 				plt.plot(1, i, data.get(i)).strokeColor("green").strokeWeight(2).style(".");
 			}
 		}
@@ -63,7 +74,7 @@ public class ReadStepsData {
 		}
 
 		PlotWindow window = PlotWindow.getWindowFor(plt, 1200, 800);
-		// window.show();
+		window.show();
 	}
 
 	private static boolean isPeak(List<Double> magnitudes, int index, double threshold) {
