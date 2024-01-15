@@ -35,10 +35,14 @@ public class D1 {
 
     public static boolean getDiagonalSumTest() {
         int[][] arr = { { 1, 2, 3, 4 }, { 4, 5, 6, 8 }, { 7, 8, 9, 10 }, { 1, 2, 3, 4 } };
-
+        printArr(arr);
+        System.out.println();
         int[][] arr2 = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 }, };
-
+        printArr(arr2);
+        System.out.println();
         int[][] arr3 = { { 1 }, { 2 }, { 3 } };
+        printArr(arr3);
+        System.out.println();
 
         return getDiagonalSum(arr) == 38 && getDiagonalSum(arr2) == 25 && getDiagonalSum(arr3) == 0;
     }

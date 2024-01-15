@@ -9,7 +9,7 @@ public class D1Adv {
 
         System.out.println(detectHomogeneousBlocks(arr, 3, 1));
 
-        System.out.println(perimiterSum(arr) + " = 21");
+        System.out.println(perimeterSum(arr) + " = 21");
 
         // 0 0 0 0 0 0 0 0
         // 0 6 6 6 6 6 6 0
@@ -77,7 +77,7 @@ public class D1Adv {
         return true;
     }
 
-    public static int perimiterSum(int[][] arr) {
+    public static int perimeterSum(int[][] arr) {
         int sum = 0;
 
         for (int i = 0; i < arr.length; i++) {
